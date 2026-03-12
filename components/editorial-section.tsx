@@ -15,7 +15,7 @@ export function EditorialSection() {
           observer.disconnect()
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
     )
 
     if (sectionRef.current) {
@@ -30,8 +30,8 @@ export function EditorialSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {/* Left Image */}
         <div
-          className={`relative h-[60vh] lg:h-[80vh] overflow-hidden transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+          className={`relative h-[60vh] lg:h-[80vh] overflow-hidden transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
           }`}
         >
           <Image
@@ -45,8 +45,8 @@ export function EditorialSection() {
 
         {/* Right Image */}
         <div
-          className={`relative h-[60vh] lg:h-[80vh] overflow-hidden transition-all duration-1000 delay-200 ${
-            isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+          className={`relative h-[60vh] lg:h-[80vh] overflow-hidden transition-all duration-700 delay-150 ${
+            isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
           }`}
         >
           <Image

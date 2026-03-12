@@ -17,7 +17,7 @@ export function MagazineSection() {
           observer.disconnect()
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
     )
 
     if (sectionRef.current) {
@@ -33,8 +33,8 @@ export function MagazineSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           {/* Magazine Image */}
           <div
-            className={`transition-all duration-1000 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            className={`transition-all duration-700 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
             <div className="relative aspect-[3/4] overflow-hidden">
@@ -49,8 +49,8 @@ export function MagazineSection() {
 
           {/* Content */}
           <div
-            className={`transition-all duration-1000 delay-200 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            className={`transition-all duration-700 delay-150 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
             <p className="text-[11px] tracking-[0.2em] text-text-tertiary uppercase mb-6">

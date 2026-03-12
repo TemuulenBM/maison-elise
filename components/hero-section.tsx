@@ -31,7 +31,7 @@ export function HeroSection() {
 
         {/* Scroll Indicator */}
         <div
-          className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-1000 delay-1000 ${
+          className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-700 delay-500 ${
             isLoaded ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -46,8 +46,8 @@ export function HeroSection() {
 
       {/* Product Strip */}
       <div
-        className={`border-t border-b border-border bg-surface-2 transition-all duration-1000 delay-500 ${
-          isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        className={`border-t border-b border-border bg-surface-2 transition-all duration-700 delay-200 ${
+          isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
         }`}
       >
         <div className="flex items-center gap-5 px-6 lg:px-12 py-4">

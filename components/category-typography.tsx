@@ -21,7 +21,7 @@ export function CategoryTypography() {
           observer.disconnect()
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
     )
 
     if (sectionRef.current) {
@@ -39,10 +39,10 @@ export function CategoryTypography() {
       <div className="max-w-5xl mx-auto px-6 lg:px-12">
         {/* Section Label */}
         <div
-          className={`text-center mb-16 lg:mb-20 transition-all duration-1000 ${
+          className={`text-center mb-16 lg:mb-20 transition-all duration-700 ${
             isVisible
               ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
+              : "opacity-0 translate-y-3"
           }`}
         >
           <p className="text-[11px] font-sans font-medium tracking-[0.2em] text-text-tertiary uppercase">
@@ -56,13 +56,13 @@ export function CategoryTypography() {
             <Link
               key={category.name}
               href={category.href}
-              className={`group relative block text-center py-8 lg:py-12 transition-all duration-1000 hover:-translate-y-0.5 ${
+              className={`group relative block text-center py-8 lg:py-12 transition-all duration-700 hover:-translate-y-0.5 ${
                 isVisible
                   ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-6"
+                  : "opacity-0 translate-y-4"
               }`}
               style={{
-                transitionDelay: `${index * 150}ms`,
+                transitionDelay: `${index * 100}ms`,
               }}
             >
               {/* Number */}

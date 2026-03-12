@@ -17,7 +17,7 @@ export function NewsletterSection() {
           observer.disconnect()
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
     )
 
     if (sectionRef.current) {
@@ -41,8 +41,8 @@ export function NewsletterSection() {
     <section ref={sectionRef} className="py-24 lg:py-32 bg-background border-t border-border">
       <div className="px-6 lg:px-12">
         <div
-          className={`max-w-2xl mx-auto text-center transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          className={`max-w-2xl mx-auto text-center transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
           <h2 className="font-serif text-2xl lg:text-3xl text-foreground mb-8">

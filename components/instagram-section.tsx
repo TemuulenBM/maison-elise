@@ -25,7 +25,7 @@ export function InstagramSection() {
           observer.disconnect()
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
     )
 
     if (sectionRef.current) {
@@ -40,8 +40,8 @@ export function InstagramSection() {
       <div className="px-6 lg:px-12">
         {/* Header */}
         <div
-          className={`text-center mb-12 transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          className={`text-center mb-12 transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
           }`}
         >
           <p className="text-[11px] tracking-[0.2em] text-text-tertiary uppercase mb-4">
@@ -62,9 +62,9 @@ export function InstagramSection() {
             <div
               key={index}
               className={`relative aspect-square overflow-hidden group cursor-pointer transition-all duration-700 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
               }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              style={{ transitionDelay: `${Math.min(index * 80, 400)}ms` }}
             >
               <Image
                 src={image.src}

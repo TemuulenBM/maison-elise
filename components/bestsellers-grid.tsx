@@ -22,7 +22,7 @@ export function BestsellersGrid() {
           observer.disconnect()
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
     )
 
     if (sectionRef.current) {
@@ -73,10 +73,10 @@ export function BestsellersGrid() {
           {products.map((product, index) => (
             <div
               key={product.id}
-              className={`group transition-all duration-700 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              className={`group transition-all duration-600 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              style={{ transitionDelay: `${Math.min(index * 70, 400)}ms` }}
               onMouseEnter={() => setHoveredProduct(product.id)}
               onMouseLeave={() => setHoveredProduct(null)}
             >
