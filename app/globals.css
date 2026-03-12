@@ -1,0 +1,202 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Dark Luxury Palette */
+  --background: #0F0F0F;
+  --foreground: #F5F0EB;
+  --card: #1A1A18;
+  --card-foreground: #F5F0EB;
+  --popover: #1A1A18;
+  --popover-foreground: #F5F0EB;
+  --primary: #C9A96E;
+  --primary-foreground: #0F0F0F;
+  --secondary: #242422;
+  --secondary-foreground: #F5F0EB;
+  --muted: #1A1A18;
+  --muted-foreground: #8A8A85;
+  --accent: #C9A96E;
+  --accent-foreground: #0F0F0F;
+  --destructive: #8B4444;
+  --destructive-foreground: #F5F0EB;
+  --border: #2A2A28;
+  --input: #2A2A28;
+  --ring: #C9A96E;
+  --radius: 0;
+  
+  /* Layered surfaces */
+  --surface-1: #0F0F0F;
+  --surface-2: #151513;
+  --surface-3: #1A1A18;
+  --surface-4: #222220;
+  --surface-5: #2A2A28;
+  
+  /* Text variations */
+  --text-primary: #F5F0EB;
+  --text-secondary: #B8B3AE;
+  --text-tertiary: #A09990;
+  --text-muted: #8A8A85;
+  --text-gold: #C9A96E;
+}
+
+@theme inline {
+  --font-sans: 'Cormorant Garamond', 'Georgia', serif;
+  --font-serif: 'Cormorant Garamond', 'Georgia', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  
+  /* Custom colors for layered surfaces */
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+  --color-surface-5: var(--surface-5);
+  --color-gold: var(--primary);
+  --color-text-tertiary: var(--text-tertiary);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Sharp corners everywhere */
+  button, a, input, textarea, select, [role="button"] {
+    border-radius: 0 !important;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--surface-1);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--surface-4);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--surface-5);
+  }
+  
+  /* Typography refinements */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+  
+  /* Image treatments */
+  img {
+    filter: brightness(0.95) contrast(1.02);
+  }
+  
+  /* Vertical writing mode for logo */
+  .writing-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  
+  /* Selection color */
+  ::selection {
+    background: var(--primary);
+    color: var(--background);
+  }
+
+  /* Focus states */
+  :focus-visible {
+    outline: 1px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@utility animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+@utility animate-slide-up {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+@utility animate-scale-in {
+  animation: scaleIn 0.6s ease-out forwards;
+}
+
+@utility text-gold {
+  color: var(--primary);
+}
+
+@utility bg-surface {
+  background-color: var(--surface-3);
+}
+
+@utility border-luxe {
+  border-color: var(--border);
+}
+
+@utility text-primary-luxe {
+  color: var(--text-primary);
+}
+
+@utility text-secondary-luxe {
+  color: var(--text-secondary);
+}
+
+@utility hover-gold {
+  &:hover {
+    color: var(--primary);
+  }
+}

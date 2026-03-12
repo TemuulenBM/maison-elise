@@ -1,0 +1,51 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Communication
+
+Always communicate with the user in Mongolian (монгол хэлээр). Code, file names, and technical terms can remain in English, but all explanations, questions, and status updates must be in Mongolian.
+
+## Project Overview
+
+Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (App Router) and deployed on Vercel. It is a static/presentational site — no backend, database, or API routes. Product data is hardcoded in components.
+
+## Commands
+
+- `pnpm dev` — start dev server
+- `pnpm build` — production build
+- `pnpm lint` — run ESLint
+- `pnpm start` — serve production build
+
+## Tech Stack
+
+- **Next.js 16** with App Router, React 19, TypeScript
+- **Tailwind CSS v4** via `@tailwindcss/postcss` (no `tailwind.config` file — config is in CSS)
+- **shadcn/ui** (new-york style, RSC-enabled) — UI primitives in `components/ui/`
+- **Lucide React** for icons
+- **Recharts** for charts, **Embla** for carousels, **Vaul** for drawers
+- Path alias: `@/*` maps to project root
+
+## Architecture
+
+- `app/` — Two routes: homepage (`/`) and product detail (`/product/[id]`). Layout loads Cormorant Garamond (serif) and Montserrat (sans) via `next/font/google`.
+- `components/` — Page-level section components (hero, header, footer, featured-collection, etc.) at root; shadcn primitives in `components/ui/`.
+- `hooks/` — `use-mobile.ts` (responsive breakpoint), `use-toast.ts` (toast state).
+- `lib/utils.ts` — Single `cn()` utility (clsx + tailwind-merge).
+- `styles/globals.css` — Default shadcn theme (unused; the active theme is `app/globals.css`).
+
+## Design System
+
+The site uses a dark luxury aesthetic with sharp corners (border-radius: 0 everywhere). Key design tokens are CSS custom properties in `app/globals.css`:
+
+- **Gold accent**: `--primary: #C9A96E` (also `--text-gold`, `--accent`)
+- **Surfaces**: Five layered dark backgrounds (`--surface-1` through `--surface-5`, from `#0F0F0F` to `#2A2A28`)
+- **Typography**: Headings use Cormorant Garamond (serif, weight 300, tracked). Body uses Montserrat via `--font-sans` variable.
+
+## Key Conventions
+
+- Images use Unsplash and Vercel Blob storage (configured in `next.config.mjs` with `unoptimized: true`)
+- TypeScript build errors are ignored in Next config (`ignoreBuildErrors: true`)
+- No testing framework is configured
+- Uses `@vercel/analytics` for page tracking
+- shadcn components are added via `pnpm dlx shadcn@latest add <component>`
