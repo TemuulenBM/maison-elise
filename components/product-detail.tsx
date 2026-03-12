@@ -90,9 +90,9 @@ export function ProductDetail({ product }: { product: Product }) {
           {/* Color Selector */}
           <div className="mb-8">
             <p className="text-[11px] tracking-[0.15em] text-text-tertiary uppercase mb-4">
-              Color: {selectedColor.name}
+              Color — <span className="text-foreground">{selectedColor.name}</span>
             </p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               {product.colors.map((color) => (
                 <button
                   type="button"
@@ -101,16 +101,16 @@ export function ProductDetail({ product }: { product: Product }) {
                     setSelectedColor(color)
                     setCurrentImageIndex(product.colors.indexOf(color))
                   }}
-                  className={`w-10 h-10 rounded-full border-2 transition-all ${
+                  className={`w-12 h-12 rounded-full transition-all duration-300 hover:scale-110 ${
                     selectedColor.name === color.name
-                      ? "border-primary scale-110"
-                      : "border-border hover:border-text-tertiary"
+                      ? "border-2 border-primary scale-110"
+                      : "border border-border hover:border-text-tertiary"
                   }`}
                   style={{ backgroundColor: color.hex }}
                   title={color.name}
                 />
               ))}
-              <button type="button" className="text-[11px] text-text-tertiary hover:text-primary transition-colors ml-4">
+              <button type="button" className="text-[12px] text-foreground underline underline-offset-4 decoration-border hover:text-primary hover:decoration-primary transition-colors ml-6">
                 Explore all ({product.colors.length})
               </button>
             </div>
