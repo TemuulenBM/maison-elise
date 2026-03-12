@@ -62,9 +62,9 @@ export function CollectionContent() {
                     </h3>
                     <div className="space-y-2">
                       {values.map((item) => (
-                        <label key={item} className="flex items-center gap-3 cursor-pointer group">
-                          <div className="w-4 h-4 border border-border group-hover:border-primary transition-colors" />
-                          <span className="text-[12px] text-muted-foreground group-hover:text-foreground transition-colors">
+                        <label key={item} className="flex items-center gap-3 cursor-pointer group/filter">
+                          <div className="w-4 h-4 border border-border group-hover/filter:border-primary transition-colors" />
+                          <span className="text-[12px] text-muted-foreground group-hover/filter:text-foreground transition-colors">
                             {item}
                           </span>
                         </label>
@@ -94,39 +94,52 @@ export function CollectionContent() {
                 >
                   <Link href={`/product/${product.id}`}>
                     <div className="relative bg-card overflow-hidden mb-4 cursor-pointer aspect-square">
+                      {/* Primary Image */}
                       <Image
                         src={product.image}
                         alt={product.name}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                        className="object-cover transition-all duration-700 group-hover:scale-105"
                       />
 
-                      {hoveredProduct === product.id && (
-                        <div className="absolute inset-0 bg-background/60 flex items-center justify-center gap-4">
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              addToCart(product, product.colors[0]?.name)
-                            }}
-                            className="p-3 bg-foreground text-background hover:bg-primary transition-colors"
-                          >
-                            <ShoppingBag className="w-5 h-5" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={(e) => e.preventDefault()}
-                            className="p-3 bg-card text-foreground hover:text-primary transition-colors border border-border"
-                          >
-                            <Heart className="w-5 h-5" />
-                          </button>
-                        </div>
+                      {/* Hover Image — second color */}
+                      {product.colors[1] && (
+                        <Image
+                          src={product.colors[1].image}
+                          alt={`${product.name} - ${product.colors[1].name}`}
+                          fill
+                          className="object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-105"
+                        />
                       )}
+
+                      {/* Bottom Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                      {/* Quick Actions */}
+                      <div className="absolute bottom-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            addToCart(product, product.colors[0]?.name)
+                          }}
+                          className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
+                        >
+                          <ShoppingBag className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => e.preventDefault()}
+                          className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:text-primary transition-colors"
+                        >
+                          <Heart className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </Link>
 
                   <div className="space-y-1">
-                    <p className="text-[11px] tracking-[0.1em] text-foreground uppercase">
+                    <p className="text-[11px] tracking-[0.1em] text-foreground uppercase group-hover:text-primary transition-colors duration-500">
                       {product.name}
                     </p>
                     <p className="text-[10px] tracking-[0.05em] text-muted-foreground uppercase">

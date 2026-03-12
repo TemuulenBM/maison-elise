@@ -87,44 +87,56 @@ export function BestsellersGrid() {
                   viewMode === "grid" ? "aspect-square" : "aspect-[3/4]"
                 }`}
               >
+                {/* Primary Image */}
                 <Image
                   src={product.image}
                   alt={product.name}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="object-cover transition-all duration-700 group-hover:scale-105"
                 />
 
-                {/* Hover Overlay */}
-                {hoveredProduct === product.id && (
-                  <div className="absolute inset-0 bg-background/60 flex items-center justify-center gap-4 animate-fade-in">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        addToCart(product, product.colors[0]?.name)
-                      }}
-                      className="p-3 bg-foreground text-background hover:bg-primary transition-colors"
-                    >
-                      <ShoppingBag className="w-5 h-5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                      }}
-                      className="p-3 bg-card text-foreground hover:text-primary transition-colors border border-border"
-                    >
-                      <Heart className="w-5 h-5" />
-                    </button>
-                  </div>
+                {/* Hover Image — second color */}
+                {product.colors[1] && (
+                  <Image
+                    src={product.colors[1].image}
+                    alt={`${product.name} - ${product.colors[1].name}`}
+                    fill
+                    className="object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-105"
+                  />
                 )}
+
+                {/* Bottom Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                {/* Quick Actions */}
+                <div className="absolute bottom-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      addToCart(product, product.colors[0]?.name)
+                    }}
+                    className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                    }}
+                    className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:text-primary transition-colors"
+                  >
+                    <Heart className="w-4 h-4" />
+                  </button>
+                </div>
               </Link>
 
               {/* Product Info */}
               <div className="space-y-1">
-                <p className="text-[11px] tracking-[0.1em] text-foreground uppercase">
+                <p className="text-[11px] tracking-[0.1em] text-foreground uppercase group-hover:text-primary transition-colors duration-500">
                   {product.name}
                 </p>
                 <p className="text-[10px] tracking-[0.05em] text-text-tertiary uppercase">
