@@ -2,6 +2,7 @@ import { Header } from "@/components/header"
 import { HeroSection } from "@/components/hero-section"
 import { CategoryTypography } from "@/components/category-typography"
 import { EditorialSection } from "@/components/editorial-section"
+import { BrandStory } from "@/components/brand-story"
 import { MagazineSection } from "@/components/magazine-section"
 import { BestsellersGrid } from "@/components/bestsellers-grid"
 import { InstagramSection } from "@/components/instagram-section"
@@ -15,6 +16,7 @@ export default function Home() {
       <HeroSection />
       <CategoryTypography />
       <EditorialSection />
+      <BrandStory />
       <MagazineSection />
       <BestsellersGrid />
       <InstagramSection />
