@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Heart, ChevronLeft, ChevronRight, Box, Truck, RotateCcw } from "lucide-react"
+import { Heart, ChevronLeft, ChevronRight, Box, Truck, RotateCcw, Pen } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import type { Product } from "@/types"
 
@@ -18,6 +18,10 @@ export function ProductDetail({ product }: { product: Product }) {
   const [selectedColor, setSelectedColor] = useState(product.colors[0])
   const [activeTab, setActiveTab] = useState<"description" | "details" | "materials" | "delivery">("description")
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isMonogramOpen, setIsMonogramOpen] = useState(false)
+  const [monogramText, setMonogramText] = useState("")
+  const [monogramFont, setMonogramFont] = useState<"classic" | "script">("classic")
+  const [monogramPosition, setMonogramPosition] = useState<"front" | "interior">("front")
   const { addToCart } = useCart()
 
   const tabContent = {
@@ -121,6 +125,107 @@ export function ProductDetail({ product }: { product: Product }) {
             <Box className="w-4 h-4" />
             3D View
           </button>
+
+          {/* Personalization */}
+          <div className="mb-4 border border-border">
+            <button
+              type="button"
+              onClick={() => setIsMonogramOpen(!isMonogramOpen)}
+              className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-surface-3 transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <Pen className="w-4 h-4 text-primary" />
+                <span className="text-[11px] tracking-[0.15em] text-foreground uppercase">
+                  Add Your Monogram
+                </span>
+              </div>
+              <span className="text-[11px] tracking-[0.1em] text-primary">
+                + Free
+              </span>
+            </button>
+
+            {isMonogramOpen && (
+              <div className="px-4 pb-5 pt-1 border-t border-border">
+                <p className="text-[12px] text-text-tertiary mb-4">
+                  Add up to 3 initials, hot-stamped in gold foil on your bag.
+                </p>
+
+                {/* Initials Input */}
+                <input
+                  type="text"
+                  value={monogramText}
+                  onChange={(e) => setMonogramText(e.target.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3))}
+                  placeholder="ABC"
+                  maxLength={3}
+                  className="w-full bg-transparent border-b border-border text-center text-2xl font-serif tracking-[0.3em] text-foreground placeholder:text-border py-3 mb-5 focus:outline-none focus:border-primary transition-colors uppercase"
+                />
+
+                {/* Font Style */}
+                <p className="text-[10px] tracking-[0.15em] text-text-tertiary uppercase mb-2">Style</p>
+                <div className="grid grid-cols-2 gap-3 mb-5">
+                  <button
+                    type="button"
+                    onClick={() => setMonogramFont("classic")}
+                    className={`py-2.5 text-[11px] tracking-[0.1em] uppercase transition-colors ${
+                      monogramFont === "classic"
+                        ? "border border-primary text-primary"
+                        : "border border-border text-text-tertiary hover:border-text-tertiary"
+                    }`}
+                  >
+                    Classic
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMonogramFont("script")}
+                    className={`py-2.5 text-[11px] tracking-[0.1em] transition-colors ${
+                      monogramFont === "script"
+                        ? "border border-primary text-primary italic"
+                        : "border border-border text-text-tertiary hover:border-text-tertiary italic"
+                    }`}
+                  >
+                    Script
+                  </button>
+                </div>
+
+                {/* Position */}
+                <p className="text-[10px] tracking-[0.15em] text-text-tertiary uppercase mb-2">Position</p>
+                <div className="grid grid-cols-2 gap-3 mb-5">
+                  <button
+                    type="button"
+                    onClick={() => setMonogramPosition("front")}
+                    className={`py-2.5 text-[11px] tracking-[0.1em] uppercase transition-colors ${
+                      monogramPosition === "front"
+                        ? "border border-primary text-primary"
+                        : "border border-border text-text-tertiary hover:border-text-tertiary"
+                    }`}
+                  >
+                    Front
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMonogramPosition("interior")}
+                    className={`py-2.5 text-[11px] tracking-[0.1em] uppercase transition-colors ${
+                      monogramPosition === "interior"
+                        ? "border border-primary text-primary"
+                        : "border border-border text-text-tertiary hover:border-text-tertiary"
+                    }`}
+                  >
+                    Interior
+                  </button>
+                </div>
+
+                {/* Preview */}
+                {monogramText && (
+                  <p className="text-[12px] text-text-tertiary text-center">
+                    Preview:{" "}
+                    <span className={`text-foreground ${monogramFont === "script" ? "italic font-serif" : "font-serif tracking-[0.2em]"}`}>
+                      {monogramText.split("").join(".")}
+                    </span>
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Add to Cart */}
           <div className="flex gap-4 mb-10">
