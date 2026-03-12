@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 
 const categories = [
-  { name: "HANDBAGS", href: "/collection", offset: 0 },
-  { name: "JEWELLERY", href: "/collection", offset: 100 },
-  { name: "SMALL LEATHER GOODS", href: "/collection", offset: 200 },
+  { name: "HANDBAGS", subtitle: "Totes, Crossbody & Clutches", href: "/collection" },
+  { name: "JEWELLERY", subtitle: "Rings, Bracelets & Necklaces", href: "/collection" },
+  { name: "SMALL LEATHER GOODS", subtitle: "Wallets, Cardholders & Pouches", href: "/collection" },
 ]
 
 export function CategoryTypography() {
@@ -34,27 +34,54 @@ export function CategoryTypography() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 lg:py-32 bg-background overflow-hidden"
+      className="py-32 lg:py-40 bg-background overflow-hidden"
     >
-      <div className="px-6 lg:px-12">
+      <div className="max-w-5xl mx-auto px-6 lg:px-12">
+        {/* Section Label */}
+        <div
+          className={`text-center mb-16 lg:mb-20 transition-all duration-1000 ${
+            isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-4"
+          }`}
+        >
+          <p className="text-[11px] font-sans font-medium tracking-[0.2em] text-text-tertiary uppercase">
+            Explore
+          </p>
+        </div>
+
+        {/* Category List */}
         <div className="flex flex-col items-center">
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <Link
               key={category.name}
               href={category.href}
-              className={`group relative py-4 lg:py-6 transition-all duration-700 ${
+              className={`group relative block text-center py-8 lg:py-12 transition-all duration-1000 hover:-translate-y-0.5 ${
                 isVisible
                   ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-8"
+                  : "opacity-0 translate-y-6"
               }`}
               style={{
-                transitionDelay: `${category.offset}ms`,
+                transitionDelay: `${index * 150}ms`,
               }}
             >
-              <span className="font-serif text-5xl sm:text-7xl lg:text-[100px] xl:text-[120px] text-foreground tracking-[-0.02em] leading-none group-hover:text-primary transition-colors duration-500">
+              {/* Number */}
+              <span className="block text-[11px] font-sans tracking-[0.2em] text-text-tertiary group-hover:text-primary transition-colors duration-500 mb-4">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+
+              {/* Category Name */}
+              <span className="block font-serif font-light text-3xl sm:text-5xl lg:text-6xl xl:text-[72px] text-foreground tracking-[0.12em] leading-none group-hover:text-primary transition-colors duration-500">
                 {category.name}
               </span>
-              <span className="absolute bottom-2 lg:bottom-4 left-0 w-0 h-[1px] bg-primary group-hover:w-full transition-all duration-500" />
+
+              {/* Subtitle */}
+              <span className="block mt-4 text-[12px] font-sans tracking-[0.1em] text-text-tertiary group-hover:text-primary/70 transition-colors duration-500">
+                {category.subtitle}
+              </span>
+
+              {/* Divider */}
+              <span className="block w-12 h-[1px] bg-border mx-auto mt-8 group-hover:bg-primary group-hover:w-20 transition-all duration-500" />
             </Link>
           ))}
         </div>
