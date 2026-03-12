@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { Header } from "@/components/header"
 import { ProductDetail } from "@/components/product-detail"
 import { Footer } from "@/components/footer"
+import { RelatedProducts } from "@/components/related-products"
 import { products } from "@/data/products"
 
 export function generateStaticParams() {
@@ -44,6 +45,7 @@ export default async function ProductPage({
     <main className="min-h-screen bg-background">
       <Header />
       <ProductDetail product={product} />
+      <RelatedProducts currentProductId={product.id} />
       <Footer />
     </main>
   )
