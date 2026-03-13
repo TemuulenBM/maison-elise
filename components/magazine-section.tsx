@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
@@ -38,7 +38,7 @@ export function MagazineSection() {
             }`}
           >
             <div className="relative aspect-[3/4] overflow-hidden">
-              <Image
+              <ImageWithSkeleton
                 src="/images/magazine.jpg"
                 alt="Longue Vue Magazine"
                 fill

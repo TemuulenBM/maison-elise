@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 import { ArrowRight } from "lucide-react"
 
 const images = [
@@ -66,7 +66,7 @@ export function InstagramSection() {
               }`}
               style={{ transitionDelay: `${Math.min(index * 80, 400)}ms` }}
             >
-              <Image
+              <ImageWithSkeleton
                 src={image.src}
                 alt={image.alt}
                 fill

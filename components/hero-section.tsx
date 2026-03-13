@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
@@ -17,7 +17,7 @@ export function HeroSection() {
       <section className="relative h-screen w-full overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <Image
+          <ImageWithSkeleton
             src="/images/hero-model.jpg"
             alt="Luxury bag campaign"
             fill
@@ -52,7 +52,7 @@ export function HeroSection() {
       >
         <div className="flex items-center gap-5 px-6 lg:px-12 py-4">
           <div className="relative w-[60px] h-[60px] shrink-0 overflow-hidden">
-            <Image
+            <ImageWithSkeleton
               src="/images/hero-bag.jpg"
               alt="Cyme bag"
               fill

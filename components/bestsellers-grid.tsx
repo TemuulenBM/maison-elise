@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ShoppingBag, Grid3X3, LayoutGrid } from "lucide-react"
 import { useCart } from "@/context/cart-context"
@@ -88,7 +89,7 @@ export function BestsellersGrid() {
                 }`}
               >
                 {/* Primary Image */}
-                <Image
+                <ImageWithSkeleton
                   src={product.image}
                   alt={product.name}
                   fill

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 
 const stats = [
   { value: "50+", label: "Years of Excellence" },
@@ -85,7 +85,7 @@ export function BrandStory() {
             }`}
           >
             <div className="relative aspect-[3/4] overflow-hidden">
-              <Image
+              <ImageWithSkeleton
                 src="/images/editorial-2.jpg"
                 alt="Maison Élise craftsmanship"
                 fill

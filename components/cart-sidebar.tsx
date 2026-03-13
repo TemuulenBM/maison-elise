@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 import { Plus, Minus, ShoppingBag, X } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import {
@@ -49,7 +49,7 @@ export function CartSidebar() {
                   className="flex gap-4 pb-6 border-b border-border"
                 >
                   <div className="w-24 h-24 bg-background flex-shrink-0 overflow-hidden relative">
-                    <Image
+                    <ImageWithSkeleton
                       src={item.product.image}
                       alt={item.product.name}
                       fill

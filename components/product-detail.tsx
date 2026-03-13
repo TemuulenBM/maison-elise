@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ChevronLeft, ChevronRight, Box, Truck, RotateCcw, Pen } from "lucide-react"
 import { useCart } from "@/context/cart-context"
@@ -37,7 +37,7 @@ export function ProductDetail({ product }: { product: Product }) {
         {/* Left - Images */}
         <div className="relative bg-card">
           <div className="aspect-[3/4] lg:aspect-auto lg:h-screen lg:sticky lg:top-0">
-            <Image
+            <ImageWithSkeleton
               src={selectedColor?.image || product.image}
               alt={product.name}
               fill

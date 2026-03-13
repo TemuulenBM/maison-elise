@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ShoppingBag, Grid3X3, LayoutGrid, SlidersHorizontal } from "lucide-react"
 import { useCart } from "@/context/cart-context"
@@ -95,7 +96,7 @@ export function CollectionContent() {
                   <Link href={`/product/${product.id}`}>
                     <div className="relative bg-card overflow-hidden mb-4 cursor-pointer aspect-square">
                       {/* Primary Image */}
-                      <Image
+                      <ImageWithSkeleton
                         src={product.image}
                         alt={product.name}
                         fill

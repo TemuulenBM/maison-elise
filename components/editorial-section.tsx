@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 
 export function EditorialSection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -34,7 +34,7 @@ export function EditorialSection() {
             isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
           }`}
         >
-          <Image
+          <ImageWithSkeleton
             src="/images/editorial-1.jpg"
             alt="Fashion editorial"
             fill
@@ -49,7 +49,7 @@ export function EditorialSection() {
             isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
           }`}
         >
-          <Image
+          <ImageWithSkeleton
             src="/images/editorial-2.jpg"
             alt="Fashion editorial"
             fill

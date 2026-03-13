@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ShoppingBag } from "lucide-react"
 import { useCart } from "@/context/cart-context"
@@ -65,7 +66,7 @@ export function RelatedProducts({ currentProductId }: { currentProductId: string
                 className="relative block bg-card overflow-hidden mb-4 aspect-square"
               >
                 {/* Primary Image */}
-                <Image
+                <ImageWithSkeleton
                   src={product.image}
                   alt={product.name}
                   fill
