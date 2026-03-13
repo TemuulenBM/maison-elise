@@ -24,11 +24,11 @@ export function CartSidebar() {
           <div className="flex items-center gap-3">
             <ShoppingBag className="w-5 h-5 text-foreground" />
             <SheetTitle className="font-serif text-xl text-foreground">
-              Your Cart
+              Your Selection
             </SheetTitle>
             <span className="text-[12px] text-muted-foreground">({items.length})</span>
           </div>
-          <SheetDescription className="sr-only">Your shopping cart</SheetDescription>
+          <SheetDescription className="sr-only">Your selection</SheetDescription>
         </SheetHeader>
 
         {/* Cart Items */}
@@ -36,9 +36,9 @@ export function CartSidebar() {
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center py-20">
               <ShoppingBag className="w-12 h-12 text-border mb-4" />
-              <p className="font-serif text-xl text-foreground mb-2">Your cart is empty</p>
+              <p className="font-serif text-xl text-foreground mb-2">Your selection is empty</p>
               <p className="text-[12px] text-muted-foreground">
-                Discover our collection and add your favorites
+                Explore our collection and find your next piece
               </p>
             </div>
           ) : (
@@ -125,17 +125,17 @@ export function CartSidebar() {
               </span>
             </div>
             <p className="text-[10px] text-muted-foreground">
-              Shipping and taxes calculated at checkout
+              Shipping and duties estimated at checkout
             </p>
             <button type="button" className="w-full py-4 bg-foreground text-background text-[11px] tracking-[0.15em] uppercase hover:bg-primary transition-colors">
-              Proceed to Checkout
+              Continue to Checkout
             </button>
             <button
               type="button"
               onClick={closeCart}
               className="w-full py-3 border border-border text-foreground text-[11px] tracking-[0.15em] uppercase hover:border-primary hover:text-primary transition-colors"
             >
-              Continue Shopping
+              Continue Browsing
             </button>
           </div>
         )}

@@ -84,7 +84,7 @@ export function MegaMenu() {
                   href="/bags/new"
                   className="text-sm text-primary hover:text-foreground transition-colors font-serif"
                 >
-                  New in
+                  New Arrivals
                 </Link>
               </li>
             </ul>

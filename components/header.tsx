@@ -8,7 +8,7 @@ import { CartSidebar } from "./cart-sidebar"
 import { useCart } from "@/context/cart-context"
 
 const navItems = [
-  { name: "BESTSELLERS", href: "/collection" },
+  { name: "ICONS", href: "/collection" },
   { name: "BAGS", href: "/bags", hasMegaMenu: true },
   { name: "JEWELLERY", href: "/jewellery", hasMegaMenu: true },
   { name: "ACCESSORIES", href: "/accessories", hasMegaMenu: true },
@@ -16,7 +16,7 @@ const navItems = [
 
 const rightNavItems = [
   { name: "INTERNATIONAL", href: "/international" },
-  { name: "STORES", href: "/stores" },
+  { name: "BOUTIQUES", href: "/stores" },
   { name: "ACCOUNT", href: "/account" },
   { name: "SEARCH", href: "/search" },
 ]

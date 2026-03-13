@@ -37,13 +37,13 @@ export function BestsellersGrid() {
       <div className="px-6 lg:px-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-12">
-          <h2 className="font-serif text-3xl lg:text-4xl text-foreground">Bestsellers</h2>
+          <h2 className="font-serif text-3xl lg:text-4xl text-foreground">Most Coveted</h2>
           <div className="flex items-center gap-6">
             <Link
               href="/collection"
               className="text-[11px] tracking-[0.15em] text-text-tertiary hover:text-primary transition-colors uppercase"
             >
-              View All
+              Explore the Collection
             </Link>
             <div className="flex items-center gap-2">
               <span className="text-[11px] text-text-tertiary">Filters (0)</span>

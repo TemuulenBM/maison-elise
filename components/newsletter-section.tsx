@@ -64,7 +64,7 @@ export function NewsletterSection() {
               type="submit"
               className="px-8 py-4 bg-foreground text-background text-[11px] tracking-[0.15em] uppercase hover:bg-primary transition-colors flex items-center justify-center gap-2 group"
             >
-              {isSubmitted ? "Subscribed!" : "Confirm"}
+              {isSubmitted ? "Thank You" : "Subscribe"}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>

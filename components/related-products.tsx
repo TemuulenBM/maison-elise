@@ -45,7 +45,7 @@ export function RelatedProducts({ currentProductId }: { currentProductId: string
             Discover More
           </p>
           <h2 className="font-serif text-3xl lg:text-4xl text-foreground">
-            You May Also Like
+            You May Also Love
           </h2>
         </div>
 

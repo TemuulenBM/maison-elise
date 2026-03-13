@@ -11,7 +11,7 @@ const tabs = [
   { id: "description" as const, label: "Description" },
   { id: "details" as const, label: "Details" },
   { id: "materials" as const, label: "Materials" },
-  { id: "delivery" as const, label: "Delivery & Returns" },
+  { id: "delivery" as const, label: "Shipping & Care" },
 ]
 
 export function ProductDetail({ product }: { product: Product }) {
@@ -28,7 +28,7 @@ export function ProductDetail({ product }: { product: Product }) {
     description: product.description,
     details: product.details,
     materials: product.materials,
-    delivery: "Free standard shipping on all orders over $500. Express shipping available. Returns accepted within 30 days of delivery. Items must be in original condition with all tags attached.",
+    delivery: "Complimentary shipping on all orders. Express delivery available upon request. We welcome exchanges within 30 days — pieces must be unworn with original packaging.",
   }
 
   return (
@@ -75,7 +75,7 @@ export function ProductDetail({ product }: { product: Product }) {
             className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] text-text-tertiary hover:text-foreground transition-colors uppercase mb-6"
           >
             <ChevronLeft className="w-4 h-4" />
-            Back to Collection
+            Return to Collection
           </Link>
 
           {/* Product Title */}
@@ -136,18 +136,18 @@ export function ProductDetail({ product }: { product: Product }) {
               <div className="flex items-center gap-2.5">
                 <Pen className="w-4 h-4 text-primary" />
                 <span className="text-[11px] tracking-[0.15em] text-foreground uppercase">
-                  Add Your Monogram
+                  Personalise with Monogram
                 </span>
               </div>
               <span className="text-[11px] tracking-[0.1em] text-primary">
-                + Free
+                Complimentary
               </span>
             </button>
 
             {isMonogramOpen && (
               <div className="px-4 pb-5 pt-1 border-t border-border">
                 <p className="text-[12px] text-text-tertiary mb-4">
-                  Add up to 3 initials, hot-stamped in gold foil on your bag.
+                  Up to three initials, hand-stamped in gold foil by our artisans.
                 </p>
 
                 {/* Initials Input */}
@@ -161,7 +161,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 />
 
                 {/* Font Style */}
-                <p className="text-[10px] tracking-[0.15em] text-text-tertiary uppercase mb-2">Style</p>
+                <p className="text-[10px] tracking-[0.15em] text-text-tertiary uppercase mb-2">Lettering</p>
                 <div className="grid grid-cols-2 gap-3 mb-5">
                   <button
                     type="button"
@@ -188,7 +188,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 </div>
 
                 {/* Position */}
-                <p className="text-[10px] tracking-[0.15em] text-text-tertiary uppercase mb-2">Position</p>
+                <p className="text-[10px] tracking-[0.15em] text-text-tertiary uppercase mb-2">Placement</p>
                 <div className="grid grid-cols-2 gap-3 mb-5">
                   <button
                     type="button"
@@ -234,7 +234,7 @@ export function ProductDetail({ product }: { product: Product }) {
               onClick={() => addToCart(product, selectedColor.name)}
               className="flex-1 py-4 bg-foreground text-background text-[11px] tracking-[0.15em] uppercase hover:bg-primary transition-colors"
             >
-              Add to Cart
+              Add to My Selection
             </button>
             <button type="button" className="p-4 border border-border text-foreground hover:text-primary hover:border-primary transition-colors">
               <Heart className="w-5 h-5" />
@@ -270,15 +270,15 @@ export function ProductDetail({ product }: { product: Product }) {
           <div className="grid grid-cols-3 gap-4 pt-8 border-t border-border">
             <div className="text-center">
               <Truck className="w-5 h-5 mx-auto mb-2 text-primary" />
-              <p className="text-[10px] text-text-tertiary">Free Shipping</p>
+              <p className="text-[10px] text-text-tertiary">Complimentary Shipping</p>
             </div>
             <div className="text-center">
               <Box className="w-5 h-5 mx-auto mb-2 text-primary" />
-              <p className="text-[10px] text-text-tertiary">Gift Packaging</p>
+              <p className="text-[10px] text-text-tertiary">Signature Gift Wrapping</p>
             </div>
             <div className="text-center">
               <RotateCcw className="w-5 h-5 mx-auto mb-2 text-primary" />
-              <p className="text-[10px] text-text-tertiary">30-Day Returns</p>
+              <p className="text-[10px] text-text-tertiary">Easy Exchanges</p>
             </div>
           </div>
         </div>
