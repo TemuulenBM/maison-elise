@@ -47,7 +47,7 @@ export function BestsellersGrid() {
               Explore the Collection
             </Link>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-text-tertiary">Filters (0)</span>
+              <span className="text-[11px] text-text-tertiary">Filter</span>
               <button
                 type="button"
                 onClick={() => setViewMode(viewMode === "grid" ? "compact" : "grid")}

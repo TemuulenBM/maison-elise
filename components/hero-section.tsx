@@ -29,6 +29,22 @@ export function HeroSection() {
           <div className="absolute inset-0 bg-gradient-to-r from-background/40 via-transparent to-transparent" />
         </div>
 
+        {/* Collection Headline */}
+        <div
+          className={`absolute bottom-28 left-6 lg:left-12 transition-all duration-1000 delay-300 ${
+            isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+        >
+          <p className="text-[11px] font-sans font-medium tracking-[0.2em] text-text-tertiary uppercase mb-4">
+            Spring 2026
+          </p>
+          <h1 className="font-serif font-light text-4xl lg:text-5xl xl:text-6xl text-foreground tracking-[0.06em] leading-[1.1]">
+            The Cyme
+            <br />
+            Collection
+          </h1>
+        </div>
+
         {/* Scroll Indicator */}
         <div
           className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-700 delay-500 ${
@@ -60,6 +76,7 @@ export function HeroSection() {
             />
           </div>
           <div className="flex-1 min-w-0">
+            <p className="text-[10px] tracking-[0.15em] text-primary uppercase mb-0.5">The Icon</p>
             <p className="font-serif text-lg text-foreground">Cyme</p>
             <p className="text-[12px] text-text-tertiary tracking-wide">$620</p>
           </div>

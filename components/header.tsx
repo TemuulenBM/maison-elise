@@ -15,7 +15,6 @@ const navItems = [
 ]
 
 const rightNavItems = [
-  { name: "INTERNATIONAL", href: "/international" },
   { name: "BOUTIQUES", href: "/stores" },
   { name: "ACCOUNT", href: "/account" },
   { name: "SEARCH", href: "/search" },

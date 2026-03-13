@@ -122,16 +122,16 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Payment Icons - Desktop */}
+          {/* Payment Icons - Desktop (subtle) */}
           <div className="hidden lg:block">
-            <h3 className="text-[11px] tracking-[0.15em] text-foreground uppercase mb-6">
+            <h3 className="text-[11px] tracking-[0.15em] text-text-tertiary/50 uppercase mb-6">
               Payment
             </h3>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               {["VISA", "MC", "PayPal", "Amex"].map((payment) => (
                 <div
                   key={payment}
-                  className="px-3 py-1.5 bg-card border border-border text-[10px] text-text-tertiary"
+                  className="px-2 py-1 text-[9px] text-text-tertiary/40 border border-border/50"
                 >
                   {payment}
                 </div>
@@ -150,12 +150,12 @@ export function Footer() {
             © MAISON ÉLISE 2026
           </p>
 
-          {/* Payment Icons - Mobile */}
-          <div className="flex lg:hidden flex-wrap gap-2 justify-center">
+          {/* Payment Icons - Mobile (subtle) */}
+          <div className="flex lg:hidden flex-wrap gap-1.5 justify-center">
             {["VISA", "MC", "PayPal", "Amex"].map((payment) => (
               <div
                 key={payment}
-                className="px-2 py-1 bg-card border border-border text-[9px] text-text-tertiary"
+                className="px-1.5 py-0.5 text-[8px] text-text-tertiary/40 border border-border/50"
               >
                 {payment}
               </div>
