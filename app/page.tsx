@@ -8,8 +8,19 @@ import { BestsellersGrid } from "@/components/bestsellers-grid"
 import { InstagramSection } from "@/components/instagram-section"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { Footer } from "@/components/footer"
+import { getProducts } from "@/lib/products"
+import { toDisplayProduct } from "@/lib/adapters"
 
-export default function Home() {
+export const revalidate = 60
+
+export default async function Home() {
+  const { products: dtos } = await getProducts({
+    page: 1,
+    limit: 6,
+    sort: "newest",
+  })
+  const products = dtos.map(toDisplayProduct)
+
   return (
     <main className="min-h-screen bg-background">
       <Header />
@@ -18,7 +29,7 @@ export default function Home() {
       <EditorialSection />
       <BrandStory />
       <MagazineSection />
-      <BestsellersGrid />
+      <BestsellersGrid products={products} />
       <InstagramSection />
       <NewsletterSection />
       <Footer />

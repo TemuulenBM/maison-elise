@@ -6,14 +6,12 @@ import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ShoppingBag } from "lucide-react"
 import { useCart } from "@/context/cart-context"
-import { products } from "@/data/products"
+import type { DisplayProduct } from "@/lib/adapters"
 
-export function RelatedProducts({ currentProductId }: { currentProductId: string }) {
+export function RelatedProducts({ products }: { products: DisplayProduct[] }) {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const { addToCart } = useCart()
-
-  const relatedProducts = products.filter((p) => p.id !== currentProductId)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -52,7 +50,7 @@ export function RelatedProducts({ currentProductId }: { currentProductId: string
 
         {/* Product Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {relatedProducts.map((product, index) => (
+          {products.map((product, index) => (
             <div
               key={product.id}
               className={`group transition-all duration-700 ${
@@ -93,7 +91,7 @@ export function RelatedProducts({ currentProductId }: { currentProductId: string
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      addToCart(product, product.colors[0]?.name)
+                      addToCart(product.defaultVariantId)
                     }}
                     className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
                   >

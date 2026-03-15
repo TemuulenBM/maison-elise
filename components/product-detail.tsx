@@ -5,7 +5,7 @@ import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ChevronLeft, ChevronRight, Box, Truck, RotateCcw, Pen } from "lucide-react"
 import { useCart } from "@/context/cart-context"
-import type { Product } from "@/types"
+import type { DisplayProduct } from "@/lib/adapters"
 
 const tabs = [
   { id: "description" as const, label: "Description" },
@@ -14,7 +14,7 @@ const tabs = [
   { id: "delivery" as const, label: "Shipping & Care" },
 ]
 
-export function ProductDetail({ product }: { product: Product }) {
+export function ProductDetail({ product }: { product: DisplayProduct }) {
   const [selectedColor, setSelectedColor] = useState(product.colors[0])
   const [activeTab, setActiveTab] = useState<"description" | "details" | "materials" | "delivery">("description")
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -231,7 +231,7 @@ export function ProductDetail({ product }: { product: Product }) {
           <div className="flex gap-4 mb-10">
             <button
               type="button"
-              onClick={() => addToCart(product, selectedColor.name)}
+              onClick={() => addToCart(product.variantMap[selectedColor.name] ?? product.defaultVariantId)}
               className="flex-1 py-4 bg-foreground text-background text-[11px] tracking-[0.15em] uppercase hover:bg-primary transition-colors"
             >
               Add to My Selection

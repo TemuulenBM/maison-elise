@@ -6,7 +6,7 @@ import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ShoppingBag, Grid3X3, LayoutGrid, SlidersHorizontal } from "lucide-react"
 import { useCart } from "@/context/cart-context"
-import { products } from "@/data/products"
+import type { DisplayProduct } from "@/lib/adapters"
 
 const filters = {
   category: ["Handbags", "Crossbody", "Shoulder bags", "Tote bags", "Mini bags"],
@@ -14,7 +14,7 @@ const filters = {
   price: ["Under $500", "$500 - $600", "$600 - $700", "Over $700"],
 }
 
-export function CollectionContent() {
+export function CollectionContent({ products }: { products: DisplayProduct[] }) {
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<"grid" | "compact">("grid")
   const [showFilters, setShowFilters] = useState(false)
@@ -122,7 +122,7 @@ export function CollectionContent() {
                           type="button"
                           onClick={(e) => {
                             e.preventDefault()
-                            addToCart(product, product.colors[0]?.name)
+                            addToCart(product.defaultVariantId)
                           }}
                           className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
                         >

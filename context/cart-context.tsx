@@ -1,98 +1,153 @@
 "use client"
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import type { Product, CartItem } from '@/types';
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react"
 
-const CART_STORAGE_KEY = 'maison-elise-cart';
-
-interface CartContextType {
-  items: CartItem[];
-  isOpen: boolean;
-  addToCart: (product: Product, selectedColor?: string) => void;
-  removeFromCart: (productId: string, selectedColor?: string) => void;
-  updateQuantity: (productId: string, quantity: number, selectedColor?: string) => void;
-  toggleCart: () => void;
-  closeCart: () => void;
-  totalItems: number;
-  totalPrice: number;
+export interface CartDisplayItem {
+  cartItemId: string
+  variantId: string
+  productName: string
+  productEdition: string
+  productSlug: string
+  colorName: string
+  image: string
+  price: number // доллар
+  quantity: number
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+interface CartContextType {
+  items: CartDisplayItem[]
+  isOpen: boolean
+  isLoading: boolean
+  addToCart: (variantId: string, quantity?: number) => Promise<void>
+  removeFromCart: (cartItemId: string) => Promise<void>
+  updateQuantity: (cartItemId: string, quantity: number) => Promise<void>
+  toggleCart: () => void
+  closeCart: () => void
+  totalItems: number
+  totalPrice: number
+  cartId: string | null
+}
+
+const CartContext = createContext<CartContextType | undefined>(undefined)
+
+interface ServerCartItem {
+  id: string
+  variantId: string
+  quantity: number
+  priceAtAdd: number
+  variant: {
+    id: string
+    sku: string
+    attributes: { color: string; colorHex: string }
+    price: number
+    available: number
+    product: { id: string; slug: string; name: string; edition: string | null }
+    images: Array<{ url: string; altText: string | null }>
+  }
+}
+
+interface ServerCart {
+  id: string | null
+  items: ServerCartItem[]
+  totalAmount: number
+  totalItems: number
+}
+
+function serverCartToDisplay(serverCart: ServerCart) {
+  return {
+    cartId: serverCart.id,
+    totalAmount: serverCart.totalAmount / 100,
+    totalItems: serverCart.totalItems,
+    items: serverCart.items.map((item): CartDisplayItem => ({
+      cartItemId: item.id,
+      variantId: item.variantId,
+      productName: item.variant.product.name,
+      productEdition: item.variant.product.edition ?? "",
+      productSlug: item.variant.product.slug,
+      colorName: item.variant.attributes.color,
+      image: item.variant.images[0]?.url ?? "/images/placeholder.jpg",
+      price: item.priceAtAdd / 100,
+      quantity: item.quantity,
+    })),
+  }
+}
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    if (typeof window === 'undefined') return [];
-    try {
-      const stored = localStorage.getItem(CART_STORAGE_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-  const [isOpen, setIsOpen] = useState(false);
+  const [items, setItems] = useState<CartDisplayItem[]>([])
+  const [isOpen, setIsOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [cartId, setCartId] = useState<string | null>(null)
 
   useEffect(() => {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+    fetch("/api/cart")
+      .then((r) => r.json())
+      .then((data: ServerCart) => {
+        const result = serverCartToDisplay(data)
+        setItems(result.items)
+        setCartId(result.cartId)
+      })
+      .catch(() => {})
+      .finally(() => setIsLoading(false))
+  }, [])
 
-  const addToCart = useCallback((product: Product, selectedColor?: string) => {
-    setItems(prev => {
-      const existingItem = prev.find(
-        item => item.product.id === product.id && item.selectedColor === selectedColor
-      );
+  const refreshCart = useCallback((data: ServerCart) => {
+    const result = serverCartToDisplay(data)
+    setItems(result.items)
+    setCartId(result.cartId)
+  }, [])
 
-      if (existingItem) {
-        return prev.map(item =>
-          item.product.id === product.id && item.selectedColor === selectedColor
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+  const addToCart = useCallback(
+    async (variantId: string, quantity = 1) => {
+      const res = await fetch("/api/cart/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ variantId, quantity }),
+      })
+      if (!res.ok) return
+      refreshCart(await res.json())
+      setIsOpen(true)
+    },
+    [refreshCart]
+  )
+
+  const removeFromCart = useCallback(
+    async (cartItemId: string) => {
+      const res = await fetch(`/api/cart/items/${cartItemId}`, { method: "DELETE" })
+      if (!res.ok) return
+      refreshCart(await res.json())
+    },
+    [refreshCart]
+  )
+
+  const updateQuantity = useCallback(
+    async (cartItemId: string, quantity: number) => {
+      if (quantity <= 0) {
+        await removeFromCart(cartItemId)
+        return
       }
+      const res = await fetch(`/api/cart/items/${cartItemId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity }),
+      })
+      if (!res.ok) return
+      refreshCart(await res.json())
+    },
+    [refreshCart, removeFromCart]
+  )
 
-      return [...prev, { product, quantity: 1, selectedColor }];
-    });
-    setIsOpen(true);
-  }, []);
+  const toggleCart = useCallback(() => setIsOpen((prev) => !prev), [])
+  const closeCart = useCallback(() => setIsOpen(false), [])
 
-  const removeFromCart = useCallback((productId: string, selectedColor?: string) => {
-    setItems(prev => prev.filter(
-      item => !(item.product.id === productId && item.selectedColor === selectedColor)
-    ));
-  }, []);
-
-  const updateQuantity = useCallback((productId: string, quantity: number, selectedColor?: string) => {
-    if (quantity <= 0) {
-      removeFromCart(productId, selectedColor);
-      return;
-    }
-    setItems(prev =>
-      prev.map(item =>
-        item.product.id === productId && item.selectedColor === selectedColor
-          ? { ...item, quantity }
-          : item
-      )
-    );
-  }, [removeFromCart]);
-
-  const toggleCart = useCallback(() => {
-    setIsOpen(prev => !prev);
-  }, []);
-
-  const closeCart = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
-  );
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
+  const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   return (
     <CartContext.Provider
       value={{
         items,
         isOpen,
+        isLoading,
         addToCart,
         removeFromCart,
         updateQuantity,
@@ -100,17 +155,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         closeCart,
         totalItems,
         totalPrice,
+        cartId,
       }}
     >
       {children}
     </CartContext.Provider>
-  );
+  )
 }
 
 export function useCart() {
-  const context = useContext(CartContext);
+  const context = useContext(CartContext)
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider")
   }
-  return context;
+  return context
 }

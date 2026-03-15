@@ -6,9 +6,9 @@ import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ShoppingBag, Grid3X3, LayoutGrid } from "lucide-react"
 import { useCart } from "@/context/cart-context"
-import { products } from "@/data/products"
+import type { DisplayProduct } from "@/lib/adapters"
 
-export function BestsellersGrid() {
+export function BestsellersGrid({ products }: { products: DisplayProduct[] }) {
   const [isVisible, setIsVisible] = useState(false)
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<"grid" | "compact">("grid")
@@ -116,7 +116,7 @@ export function BestsellersGrid() {
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      addToCart(product, product.colors[0]?.name)
+                      addToCart(product.defaultVariantId)
                     }}
                     className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
                   >
