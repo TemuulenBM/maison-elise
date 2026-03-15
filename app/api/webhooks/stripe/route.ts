@@ -33,29 +33,33 @@ export async function POST(request: NextRequest) {
 
       if (!orderId) break;
 
-      // Order status → CONFIRMED
-      await prisma.order.update({
-        where: { id: orderId },
-        data: { status: "CONFIRMED" },
-      });
-
-      // Stock хасах: reserved → stockQuantity бууруулах
+      // Idempotency: зөвхөн PENDING order-ийг process хийх
       const order = await prisma.order.findUnique({
         where: { id: orderId },
         include: { items: true },
       });
 
-      if (order) {
-        for (const item of order.items) {
-          await prisma.productVariant.update({
+      if (!order || order.status !== "PENDING") {
+        // Аль хэдийн process хийгдсэн эсвэл олдоогүй — алгасах
+        break;
+      }
+
+      // Атомар: Order status + stock decrement нэг transaction-д
+      await prisma.$transaction([
+        prisma.order.update({
+          where: { id: orderId },
+          data: { status: "CONFIRMED" },
+        }),
+        ...order.items.map((item) =>
+          prisma.productVariant.update({
             where: { id: item.variantId },
             data: {
               stockQuantity: { decrement: item.quantity },
               reserved: { decrement: item.quantity },
             },
-          });
-        }
-      }
+          })
+        ),
+      ]);
 
       // Cart устгах
       if (cartId) {

@@ -8,7 +8,7 @@ Always communicate with the user in Mongolian (монгол хэлээр). Code,
 
 ## Project Overview
 
-Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (App Router) and deployed on Vercel. It is a static/presentational site — no backend, database, or API routes. Product data is hardcoded in components.
+Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (App Router) and deployed on Vercel. The project has two layers: a database-backed commerce core (Prisma + Supabase PostgreSQL) and a legacy static presentation layer that coexists during migration.
 
 ## Commands
 
@@ -16,23 +16,51 @@ Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (A
 - `pnpm build` — production build
 - `pnpm lint` — run ESLint
 - `pnpm start` — serve production build
+- `pnpm dlx prisma generate` — regenerate Prisma client (output: `lib/generated/prisma/`)
+- `pnpm dlx prisma migrate dev` — run database migrations
+- `pnpm dlx prisma db seed` — seed database (`prisma/seed.ts`)
+- `pnpm dlx shadcn@latest add <component>` — add shadcn/ui component
 
 ## Tech Stack
 
 - **Next.js 16** with App Router, React 19, TypeScript
-- **Tailwind CSS v4** via `@tailwindcss/postcss` (no `tailwind.config` file — config is in CSS)
+- **Tailwind CSS v4** via `@tailwindcss/postcss` (no `tailwind.config` file — config is in `app/globals.css`)
 - **shadcn/ui** (new-york style, RSC-enabled) — UI primitives in `components/ui/`
-- **Lucide React** for icons
+- **Prisma** with `@prisma/adapter-pg` (PostgreSQL driver adapter) — schema in `prisma/schema.prisma`, generated client in `lib/generated/prisma/`
+- **Supabase** — PostgreSQL database + auth (profiles linked to `auth.users`)
+- **Stripe** — payment processing with webhooks (`app/api/webhooks/stripe/`)
+- **Upstash Redis** — cart session storage, rate limiting (checkout: 5/min, waitlist: 3/min)
+- **Lucide React** for icons, **Framer Motion** for animations
 - **Recharts** for charts, **Embla** for carousels, **Vaul** for drawers
+- **Zod** — request validation (`lib/validators/`)
 - Path alias: `@/*` maps to project root
 
 ## Architecture
 
-- `app/` — Two routes: homepage (`/`) and product detail (`/product/[id]`). Layout loads Cormorant Garamond (serif) and Montserrat (sans) via `next/font/google`.
-- `components/` — Page-level section components (hero, header, footer, featured-collection, etc.) at root; shadcn primitives in `components/ui/`.
-- `hooks/` — `use-mobile.ts` (responsive breakpoint), `use-toast.ts` (toast state).
-- `lib/utils.ts` — Single `cn()` utility (clsx + tailwind-merge).
-- `styles/globals.css` — Default shadcn theme (unused; the active theme is `app/globals.css`).
+### Routes
+- `/` — homepage
+- `/product/[slug]` — product detail (slug-based, not id-based)
+- `/collection` — collection page
+- `/api/products`, `/api/products/[slug]`, `/api/products/[slug]/variants` — product API
+- `/api/cart`, `/api/cart/items`, `/api/cart/items/[id]`, `/api/cart/merge` — cart API (guest sessions via `cart_session` cookie)
+- `/api/checkout/intent` — Stripe PaymentIntent creation
+- `/api/webhooks/stripe` — Stripe webhook handler
+- `/api/waitlist`, `/api/wishlist` — waitlist/wishlist endpoints
+
+### Data Flow (Dual-Layer)
+The project is mid-migration between two data architectures:
+
+1. **Legacy layer**: `data/products.ts` has hardcoded product data using `types/Product` interface (prices in dollars). Some UI components still consume this directly.
+2. **Database layer**: Prisma models → API routes return DTOs (`types/ProductDTO`, `CartDTO`, etc.) with prices in **cents**. The adapter in `lib/adapters.ts` converts `ProductDTO` → `DisplayProduct` for UI consumption (cents → dollars).
+
+### Key Modules
+- `context/cart-context.tsx` — client-side cart state backed by API calls, with `cart_session` cookie for guest users
+- `lib/prisma.ts` — singleton Prisma client with pg pool adapter
+- `lib/stripe.ts` — server-side Stripe instance
+- `lib/redis.ts` — Upstash Redis client + rate limiters
+- `lib/adapters.ts` — `toDisplayProduct()` bridges database DTOs to legacy UI `Product` type
+- `lib/validators/` — Zod schemas for cart, order, product, waitlist, wishlist requests
+- `components/providers.tsx` — client-side provider wrapper (CartProvider)
 
 ## Design System
 
@@ -42,14 +70,33 @@ The site uses a dark luxury aesthetic with sharp corners (border-radius: 0 every
 - **Surfaces**: Five layered dark backgrounds (`--surface-1` through `--surface-5`, from `#0F0F0F` to `#2A2A28`)
 - **Typography**: Headings use Cormorant Garamond (serif, weight 300, tracked). Body uses Montserrat via `--font-sans` variable.
 
+## Environment Variables
+
+Required variables are listed in `.env.example`: Supabase (URL, anon key, service role key, DATABASE_URL), Stripe (secret key, publishable key, webhook secret), Upstash Redis (URL, token).
+
 ## Rules
 
 - **Never** include Claude, AI, LLM, or any AI-related attribution in commit messages, code comments, PR descriptions, or any other project artifacts. No `Co-Authored-By` AI lines, no "generated by AI" comments.
+- **Commit-ийн өмнө `pnpm lint`** ажиллуулах.
+- **API route нэмэх/өөрчлөхөд CLAUDE.md шинэчлэх**: `## Architecture > Routes` хэсэгт endpoint, хамаарлыг бичих.
+- **Route дараалал**: Specific routes (`/api/cart/items`, `/api/products/[slug]/variants`) нь generic dynamic routes-ээс (`/api/cart/[id]`, `/api/products/[slug]`) ЗААВАЛ өмнө бүртгэгдэнэ. Next.js App Router file-based routing ихэнхийг автоматаар шийддэг ч nested dynamic segment-д анхаарах.
+- **DI-бэлэн интеграци**: Гадаад сервисүүдийг (Stripe, Supabase, Redis) шууд import хийхийн оронд `lib/` дахь wrapper module-аар дамжуулах. Ирээдүйд implementation солих боломжтой байлгах.
+
+## Шийдвэр гаргах горим
+
+API структур, DB schema, эсвэл томоохон архитектурын шийдвэр гаргахдаа дараах **3 өнцгөөс** шүүмжлэн, дараа нь шийдэл санал болго:
+
+1. **🔵 Мэргэжлийн инженер**: "Техникийн өр, scalability асуудал байна уу?"
+2. **🔴 Шүүмжлэгч (Devil's Advocate)**: "6 сарын дараа энэ кодыг засварлахад ямар бэрхшээл гарах вэ?"
+3. **🟢 Хэрэглэгч & Интеграци**: "Frontend-ээс энэ API-г consume хийхэд хэр хялбар вэ? Response бүтэц, error handling зөв үү?"
 
 ## Key Conventions
 
-- Images use Unsplash and Vercel Blob storage (configured in `next.config.mjs` with `unoptimized: true`)
+- Prices are stored in **cents** in the database; the UI displays **dollars** (conversion in adapters/formatPrice)
+- Product routing uses **slugs**, not numeric IDs
+- Cart supports both guest (session-based) and authenticated (user-based) modes
+- Images use Unsplash and Vercel Blob storage (configured in `next.config.mjs`)
 - TypeScript build errors are ignored in Next config (`ignoreBuildErrors: true`)
 - No testing framework is configured
 - Uses `@vercel/analytics` for page tracking
-- shadcn components are added via `pnpm dlx shadcn@latest add <component>`
+- Prisma schema uses `@@map()` for snake_case table/column names with camelCase model fields

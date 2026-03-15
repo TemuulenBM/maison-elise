@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sheet"
 
 export function CartSidebar() {
-  const { items, isOpen, isLoading, closeCart, updateQuantity, removeFromCart, totalPrice } = useCart()
+  const { items, isOpen, isLoading, error, closeCart, updateQuantity, removeFromCart, totalPrice } = useCart()
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
@@ -31,6 +31,13 @@ export function CartSidebar() {
           </div>
           <SheetDescription className="sr-only">Your selection</SheetDescription>
         </SheetHeader>
+
+        {/* Error Banner */}
+        {error && (
+          <div className="mx-6 mt-4 p-3 bg-red-950/50 border border-red-900/50 text-red-200 text-[12px]">
+            {error}
+          </div>
+        )}
 
         {/* Cart Items */}
         <div className="flex-1 overflow-y-auto p-6">

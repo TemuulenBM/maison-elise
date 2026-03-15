@@ -18,11 +18,13 @@ interface CartContextType {
   items: CartDisplayItem[]
   isOpen: boolean
   isLoading: boolean
+  error: string | null
   addToCart: (variantId: string, quantity?: number) => Promise<void>
   removeFromCart: (cartItemId: string) => Promise<void>
   updateQuantity: (cartItemId: string, quantity: number) => Promise<void>
   toggleCart: () => void
   closeCart: () => void
+  clearError: () => void
   totalItems: number
   totalPrice: number
   cartId: string | null
@@ -77,6 +79,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [cartId, setCartId] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  // Алдааг 5 секундын дараа автоматаар цэвэрлэх
+  useEffect(() => {
+    if (!error) return
+    const timer = setTimeout(() => setError(null), 5000)
+    return () => clearTimeout(timer)
+  }, [error])
 
   useEffect(() => {
     fetch("/api/cart")
@@ -86,7 +96,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setItems(result.items)
         setCartId(result.cartId)
       })
-      .catch(() => {})
+      .catch(() => setError("Failed to load cart"))
       .finally(() => setIsLoading(false))
   }, [])
 
@@ -98,23 +108,41 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = useCallback(
     async (variantId: string, quantity = 1) => {
-      const res = await fetch("/api/cart/items", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ variantId, quantity }),
-      })
-      if (!res.ok) return
-      refreshCart(await res.json())
-      setIsOpen(true)
+      setError(null)
+      try {
+        const res = await fetch("/api/cart/items", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ variantId, quantity }),
+        })
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          setError(data.error ?? "Failed to add item to cart")
+          return
+        }
+        refreshCart(await res.json())
+        setIsOpen(true)
+      } catch {
+        setError("Network error — please try again")
+      }
     },
     [refreshCart]
   )
 
   const removeFromCart = useCallback(
     async (cartItemId: string) => {
-      const res = await fetch(`/api/cart/items/${cartItemId}`, { method: "DELETE" })
-      if (!res.ok) return
-      refreshCart(await res.json())
+      setError(null)
+      try {
+        const res = await fetch(`/api/cart/items/${cartItemId}`, { method: "DELETE" })
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          setError(data.error ?? "Failed to remove item")
+          return
+        }
+        refreshCart(await res.json())
+      } catch {
+        setError("Network error — please try again")
+      }
     },
     [refreshCart]
   )
@@ -125,19 +153,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         await removeFromCart(cartItemId)
         return
       }
-      const res = await fetch(`/api/cart/items/${cartItemId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity }),
-      })
-      if (!res.ok) return
-      refreshCart(await res.json())
+      setError(null)
+      try {
+        const res = await fetch(`/api/cart/items/${cartItemId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ quantity }),
+        })
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          setError(data.error ?? "Failed to update quantity")
+          return
+        }
+        refreshCart(await res.json())
+      } catch {
+        setError("Network error — please try again")
+      }
     },
     [refreshCart, removeFromCart]
   )
 
   const toggleCart = useCallback(() => setIsOpen((prev) => !prev), [])
   const closeCart = useCallback(() => setIsOpen(false), [])
+  const clearError = useCallback(() => setError(null), [])
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -148,11 +186,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         items,
         isOpen,
         isLoading,
+        error,
         addToCart,
         removeFromCart,
         updateQuantity,
         toggleCart,
         closeCart,
+        clearError,
         totalItems,
         totalPrice,
         cartId,
