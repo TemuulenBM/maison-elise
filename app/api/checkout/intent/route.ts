@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { checkoutIntentSchema } from "@/lib/validators/order";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -16,6 +17,16 @@ export async function POST(request: NextRequest) {
 
   const { cartId, shippingAddress, giftPackaging, giftNote, idempotencyKey } =
     parsed.data;
+
+  // Authenticated user шалгах (guest checkout-д null)
+  let authUserId: string | null = null;
+  try {
+    const supabase = await createServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    authUserId = user?.id ?? null;
+  } catch {
+    // Auth unavailable — guest checkout
+  }
 
   // Cart + items авах
   const cart = await prisma.cart.findUnique({
@@ -92,7 +103,7 @@ export async function POST(request: NextRequest) {
       // 4. Order үүсгэх
       const newOrder = await tx.order.create({
         data: {
-          userId: cart.userId ?? "00000000-0000-0000-0000-000000000000",
+          userId: authUserId ?? cart.userId ?? "00000000-0000-0000-0000-000000000000",
           status: "PENDING",
           totalAmount: amount,
           paymentIntentId: "", // Stripe-аас авсны дараа update хийнэ

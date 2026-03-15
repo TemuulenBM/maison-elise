@@ -47,6 +47,10 @@ Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (A
 - `/checkout/confirmation` — order confirmation (query: orderId, payment_intent_client_secret)
 - `/api/checkout/intent` — Stripe PaymentIntent creation
 - `/api/webhooks/stripe` — Stripe webhook handler
+- `/auth/login` — login page
+- `/auth/signup` — signup page
+- `/auth/callback` — auth callback (code exchange, profile creation, cart merge)
+- `/account` — user account dashboard (protected, requires auth)
 - `/api/waitlist`, `/api/wishlist` — waitlist/wishlist endpoints
 
 ### Data Flow (Dual-Layer)
@@ -62,7 +66,13 @@ The project is mid-migration between two data architectures:
 - `lib/redis.ts` — Upstash Redis client + rate limiters
 - `lib/adapters.ts` — `toDisplayProduct()` bridges database DTOs to legacy UI `Product` type
 - `lib/validators/` — Zod schemas for cart, order, product, waitlist, wishlist requests
-- `components/providers.tsx` — client-side provider wrapper (CartProvider)
+- `context/auth-context.tsx` — client-side auth state (AuthProvider, useAuth hook)
+- `lib/supabase/server.ts` — cookie-based Supabase server client (`@supabase/ssr`)
+- `lib/supabase/client.ts` — cookie-based Supabase browser client (`@supabase/ssr`)
+- `lib/supabase/middleware.ts` — Supabase middleware client (request/response cookie bridge)
+- `lib/supabase.ts` — admin Supabase client (service role, NOT for auth)
+- `middleware.ts` — session refresh + route protection (`/account/*` protected)
+- `components/providers.tsx` — client-side provider wrapper (AuthProvider → CartProvider)
 
 ## Design System
 

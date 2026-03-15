@@ -88,7 +88,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return () => clearTimeout(timer)
   }, [error])
 
-  useEffect(() => {
+  const fetchCart = useCallback(() => {
     fetch("/api/cart")
       .then((r) => r.json())
       .then((data: ServerCart) => {
@@ -99,6 +99,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       .catch(() => setError("Failed to load cart"))
       .finally(() => setIsLoading(false))
   }, [])
+
+  useEffect(() => {
+    fetchCart()
+  }, [fetchCart])
+
+  // Auth state change дээр cart дахин fetch (login/logout)
+  useEffect(() => {
+    const handleAuthChange = () => fetchCart()
+    window.addEventListener("auth-state-changed", handleAuthChange)
+    return () => window.removeEventListener("auth-state-changed", handleAuthChange)
+  }, [fetchCart])
 
   const refreshCart = useCallback((data: ServerCart) => {
     const result = serverCartToDisplay(data)

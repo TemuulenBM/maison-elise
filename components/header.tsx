@@ -2,10 +2,18 @@
 
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
-import { Search, Heart, Menu, X, ChevronDown } from "lucide-react"
+import { Heart, Menu, X, ChevronDown, LogOut, User, Package } from "lucide-react"
 import { MegaMenu } from "./mega-menu"
 import { CartSidebar } from "./cart-sidebar"
 import { useCart } from "@/context/cart-context"
+import { useAuth } from "@/context/auth-context"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const navItems = [
   { name: "ICONS", href: "/collection" },
@@ -14,17 +22,12 @@ const navItems = [
   { name: "ACCESSORIES", href: "/accessories", hasMegaMenu: true },
 ]
 
-const rightNavItems = [
-  { name: "BOUTIQUES", href: "/stores" },
-  { name: "ACCOUNT", href: "/account" },
-  { name: "SEARCH", href: "/search" },
-]
-
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null)
   const [isScrolled, setIsScrolled] = useState(false)
   const { totalItems, toggleCart } = useCart()
+  const { user, isLoading: authLoading, signOut } = useAuth()
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent, itemName: string) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -52,6 +55,11 @@ export function Header() {
       window.removeEventListener("keydown", handleEscape)
     }
   }, [])
+
+  // User-ийн нэрийн эхний үсэг (avatar-д)
+  const userInitial = user?.user_metadata?.full_name
+    ? (user.user_metadata.full_name as string).charAt(0).toUpperCase()
+    : user?.email?.charAt(0).toUpperCase() ?? "?"
 
   return (
     <>
@@ -110,15 +118,70 @@ export function Header() {
             {/* Right Navigation */}
             <div className="flex items-center gap-6 md:gap-8">
               <div className="hidden lg:flex items-center gap-8">
-                {rightNavItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors duration-300 font-sans font-medium uppercase"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                <Link
+                  href="/stores"
+                  className="text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors duration-300 font-sans font-medium uppercase"
+                >
+                  BOUTIQUES
+                </Link>
+
+                {/* Auth-aware Account section */}
+                {!authLoading && (
+                  user ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          type="button"
+                          className="w-8 h-8 flex items-center justify-center bg-primary text-background text-[11px] font-medium hover:bg-primary/90 transition-colors"
+                          aria-label="Account menu"
+                        >
+                          {userInitial}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-48 bg-[var(--surface-2)] border-border rounded-none"
+                      >
+                        <DropdownMenuItem asChild className="cursor-pointer text-[11px] tracking-[0.05em] text-foreground focus:text-primary focus:bg-transparent">
+                          <Link href="/account" className="flex items-center gap-3 px-3 py-2.5">
+                            <User className="w-3.5 h-3.5" />
+                            My Account
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild className="cursor-pointer text-[11px] tracking-[0.05em] text-foreground focus:text-primary focus:bg-transparent">
+                          <Link href="/account" className="flex items-center gap-3 px-3 py-2.5">
+                            <Package className="w-3.5 h-3.5" />
+                            Orders
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-border" />
+                        <DropdownMenuItem
+                          className="cursor-pointer text-[11px] tracking-[0.05em] text-muted-foreground focus:text-red-400 focus:bg-transparent"
+                          onClick={signOut}
+                        >
+                          <div className="flex items-center gap-3 px-3 py-2.5">
+                            <LogOut className="w-3.5 h-3.5" />
+                            Sign Out
+                          </div>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <Link
+                      href="/auth/login"
+                      className="text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors duration-300 font-sans font-medium uppercase"
+                    >
+                      SIGN IN
+                    </Link>
+                  )
+                )}
+
+                <Link
+                  href="/search"
+                  className="text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors duration-300 font-sans font-medium uppercase"
+                >
+                  SEARCH
+                </Link>
               </div>
 
               <button type="button" className="relative text-foreground hover:text-primary transition-colors" aria-label="Wishlist">
@@ -183,16 +246,49 @@ export function Header() {
               </Link>
             ))}
             <div className="border-t border-border my-4" />
-            {rightNavItems.map((item) => (
+            <Link
+              href="/stores"
+              className="text-left text-lg text-text-tertiary hover:text-primary transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              BOUTIQUES
+            </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/account"
+                  className="text-left text-lg text-text-tertiary hover:text-primary transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  MY ACCOUNT
+                </Link>
+                <button
+                  type="button"
+                  className="text-left text-lg text-text-tertiary hover:text-red-400 transition-colors"
+                  onClick={() => {
+                    setMobileMenuOpen(false)
+                    signOut()
+                  }}
+                >
+                  SIGN OUT
+                </button>
+              </>
+            ) : (
               <Link
-                key={item.name}
-                href={item.href}
+                href="/auth/login"
                 className="text-left text-lg text-text-tertiary hover:text-primary transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {item.name}
+                SIGN IN
               </Link>
-            ))}
+            )}
+            <Link
+              href="/search"
+              className="text-left text-lg text-text-tertiary hover:text-primary transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              SEARCH
+            </Link>
           </div>
         </div>
       )}
