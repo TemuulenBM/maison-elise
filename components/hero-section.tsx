@@ -1,16 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
 export function HeroSection() {
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  useEffect(() => {
-    setIsLoaded(true)
-  }, [])
+  const [isLoaded] = useState(true)
 
   return (
     <>

@@ -40,7 +40,10 @@ Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (A
 ### Routes
 - `/` — homepage
 - `/product/[slug]` — product detail (slug-based, not id-based)
-- `/collection` — collection page
+- `/collection` — collection page (supports `?category=`, `?sort=`, `?page=` query params)
+- `/bags` — bags category page (reuses CollectionContent with parentCategory filter)
+- `/jewellery` — jewellery category page
+- `/accessories` — accessories category page
 - `/api/products`, `/api/products/[slug]`, `/api/products/[slug]/variants` — product API
 - `/api/cart`, `/api/cart/items`, `/api/cart/items/[id]`, `/api/cart/merge` — cart API (guest sessions via `cart_session` cookie)
 - `/checkout` — checkout page (shipping, payment, order review)

@@ -1,5 +1,6 @@
 import { cookies } from "next/headers"
 import { prisma } from "./prisma"
+import type { Prisma } from "@/lib/generated/prisma"
 import type { CartDTO, ServerCartItemDTO, VariantAttributes } from "@/types"
 
 const SESSION_COOKIE = "me_session_id"
@@ -56,9 +57,10 @@ const cartInclude = {
   },
 } as const
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function toCartDTO(cart: any): CartDTO {
-  const items: ServerCartItemDTO[] = cart.items.map((item: any) => ({
+type CartWithItems = Prisma.CartGetPayload<typeof cartInclude extends Prisma.CartInclude ? { include: typeof cartInclude } : never>
+
+function toCartDTO(cart: CartWithItems): CartDTO {
+  const items: ServerCartItemDTO[] = cart.items.map((item) => ({
     id: item.id,
     variantId: item.variantId,
     quantity: item.quantity,
@@ -66,11 +68,11 @@ function toCartDTO(cart: any): CartDTO {
     variant: {
       id: item.variant.id,
       sku: item.variant.sku,
-      attributes: item.variant.attributes as VariantAttributes,
+      attributes: item.variant.attributes as unknown as VariantAttributes,
       price: item.variant.priceOverride ?? item.priceAtAdd,
       available: item.variant.stockQuantity - item.variant.reserved,
       product: item.variant.product,
-      images: item.variant.images.map((img: any) => ({
+      images: item.variant.images.map((img) => ({
         id: img.id,
         url: img.url,
         altText: img.altText,

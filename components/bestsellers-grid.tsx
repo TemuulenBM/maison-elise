@@ -10,7 +10,7 @@ import type { DisplayProduct } from "@/lib/adapters"
 
 export function BestsellersGrid({ products }: { products: DisplayProduct[] }) {
   const [isVisible, setIsVisible] = useState(false)
-  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null)
+  const [, setHoveredProduct] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<"grid" | "compact">("grid")
   const sectionRef = useRef<HTMLElement>(null)
   const { addToCart } = useCart()

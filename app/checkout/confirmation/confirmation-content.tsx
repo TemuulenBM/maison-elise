@@ -1,10 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Loader2 } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
 interface OrderItemData {
@@ -58,32 +57,18 @@ function AnimatedCheckmark() {
 export function ConfirmationContent() {
   const searchParams = useSearchParams()
   const orderId = searchParams.get("orderId")
-  const [orderData, setOrderData] = useState<LastOrder | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    // Retrieve order data from sessionStorage
+  const [orderData] = useState<LastOrder | null>(() => {
     try {
-      const stored = sessionStorage.getItem("me_last_order")
+      const stored = typeof window !== "undefined" ? sessionStorage.getItem("me_last_order") : null
       if (stored) {
-        const data = JSON.parse(stored) as LastOrder
-        setOrderData(data)
-        // Clean up after retrieval
         sessionStorage.removeItem("me_last_order")
+        return JSON.parse(stored) as LastOrder
       }
     } catch {
       // sessionStorage not available
     }
-    setIsLoading(false)
-  }, [])
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
-      </div>
-    )
-  }
+    return null
+  })
 
   return (
     <div className="min-h-screen bg-background">

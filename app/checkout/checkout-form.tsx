@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -92,7 +91,6 @@ type CheckoutState = "idle" | "creating" | "confirming" | "succeeded" | "error"
    ────────────────────────────────────────────── */
 
 function CheckoutFormInner() {
-  const router = useRouter()
   const stripe = useStripe()
   const elements = useElements()
   const { items, totalPrice, cartId, isLoading: cartLoading } = useCart()

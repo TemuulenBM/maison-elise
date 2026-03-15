@@ -1,15 +1,15 @@
-import { prisma } from "./prisma";
-import type { ProductQuery } from "./validators/product";
-import type { ProductDTO, ProductVariantDTO, ProductImageDTO } from "@/types";
+import { prisma } from "./prisma"
+import type { ProductQuery } from "./validators/product"
+import type { ProductDTO, ProductVariantDTO, ProductImageDTO } from "@/types"
 
 // ─── Prisma → DTO хөрвүүлэгч ───
 
 function toImageDTO(img: {
-  id: string;
-  url: string;
-  altText: string | null;
-  sortOrder: number;
-  isPrimary: boolean;
+  id: string
+  url: string
+  altText: string | null
+  sortOrder: number
+  isPrimary: boolean
 }): ProductImageDTO {
   return {
     id: img.id,
@@ -17,22 +17,28 @@ function toImageDTO(img: {
     altText: img.altText,
     sortOrder: img.sortOrder,
     isPrimary: img.isPrimary,
-  };
+  }
 }
 
 function toVariantDTO(
   variant: {
-    id: string;
-    sku: string;
-    attributes: unknown;
-    priceOverride: number | null;
-    stockQuantity: number;
-    reserved: number;
-    images: { id: string; url: string; altText: string | null; sortOrder: number; isPrimary: boolean }[];
+    id: string
+    sku: string
+    attributes: unknown
+    priceOverride: number | null
+    stockQuantity: number
+    reserved: number
+    images: {
+      id: string
+      url: string
+      altText: string | null
+      sortOrder: number
+      isPrimary: boolean
+    }[]
   },
-  basePrice: number
+  basePrice: number,
 ): ProductVariantDTO {
-  const attrs = variant.attributes as { color: string; colorHex: string; size?: string };
+  const attrs = variant.attributes as { color: string; colorHex: string; size?: string }
   return {
     id: variant.id,
     sku: variant.sku,
@@ -42,56 +48,60 @@ function toVariantDTO(
     reserved: variant.reserved,
     available: variant.stockQuantity - variant.reserved,
     images: variant.images.map(toImageDTO),
-  };
+  }
 }
 
 // ─── Query helpers ───
 
 export async function getProducts(query: ProductQuery): Promise<{
-  products: ProductDTO[];
-  total: number;
-  page: number;
-  totalPages: number;
+  products: ProductDTO[]
+  total: number
+  page: number
+  totalPages: number
 }> {
-  const { category, collection, status, sort, page, limit, search } = query;
+  const { category, parentCategory, collection, status, sort, page, limit, search } = query
 
-  const where: Record<string, unknown> = {};
+  const where: Record<string, unknown> = {}
 
-  if (status) where.status = status;
-  else where.status = "ACTIVE";
+  if (status) where.status = status
+  else where.status = "ACTIVE"
 
-  if (category) {
-    where.category = { slug: category };
+  if (parentCategory) {
+    where.category = {
+      OR: [{ slug: parentCategory }, { parent: { slug: parentCategory } }],
+    }
+  } else if (category) {
+    where.category = { slug: category }
   }
   if (collection) {
-    where.collection = { slug: collection };
+    where.collection = { slug: collection }
   }
   if (search) {
     where.OR = [
       { name: { contains: search, mode: "insensitive" } },
       { edition: { contains: search, mode: "insensitive" } },
       { description: { contains: search, mode: "insensitive" } },
-    ];
+    ]
   }
 
-  const orderBy: Record<string, string> = {};
+  const orderBy: Record<string, string> = {}
   switch (sort) {
     case "price_asc":
-      orderBy.basePrice = "asc";
-      break;
+      orderBy.basePrice = "asc"
+      break
     case "price_desc":
-      orderBy.basePrice = "desc";
-      break;
+      orderBy.basePrice = "desc"
+      break
     case "name_asc":
-      orderBy.name = "asc";
-      break;
+      orderBy.name = "asc"
+      break
     case "newest":
     default:
-      orderBy.createdAt = "desc";
-      break;
+      orderBy.createdAt = "desc"
+      break
   }
 
-  const skip = (page - 1) * limit;
+  const skip = (page - 1) * limit
 
   const [items, total] = await Promise.all([
     prisma.product.findMany({
@@ -109,7 +119,7 @@ export async function getProducts(query: ProductQuery): Promise<{
       },
     }),
     prisma.product.count({ where }),
-  ]);
+  ])
 
   const products: ProductDTO[] = items.map((p) => ({
     id: p.id,
@@ -126,14 +136,29 @@ export async function getProducts(query: ProductQuery): Promise<{
     collection: p.collection,
     variants: p.variants.map((v) => toVariantDTO(v, p.basePrice)),
     images: p.images.map(toImageDTO),
-  }));
+  }))
 
   return {
     products,
     total,
     page,
     totalPages: Math.ceil(total / limit),
-  };
+  }
+}
+
+export async function getSubcategories(
+  parentSlug: string,
+): Promise<{ slug: string; name: string }[]> {
+  const parent = await prisma.category.findUnique({
+    where: { slug: parentSlug },
+    include: {
+      children: {
+        orderBy: { sortOrder: "asc" },
+        select: { slug: true, name: true },
+      },
+    },
+  })
+  return parent?.children ?? []
 }
 
 export async function getProductBySlug(slug: string): Promise<ProductDTO | null> {
@@ -147,9 +172,9 @@ export async function getProductBySlug(slug: string): Promise<ProductDTO | null>
       },
       images: { orderBy: { sortOrder: "asc" } },
     },
-  });
+  })
 
-  if (!p) return null;
+  if (!p) return null
 
   return {
     id: p.id,
@@ -166,7 +191,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDTO | null>
     collection: p.collection,
     variants: p.variants.map((v) => toVariantDTO(v, p.basePrice)),
     images: p.images.map(toImageDTO),
-  };
+  }
 }
 
 export async function getProductById(id: string): Promise<ProductDTO | null> {
@@ -180,9 +205,9 @@ export async function getProductById(id: string): Promise<ProductDTO | null> {
       },
       images: { orderBy: { sortOrder: "asc" } },
     },
-  });
+  })
 
-  if (!p) return null;
+  if (!p) return null
 
   return {
     id: p.id,
@@ -199,5 +224,5 @@ export async function getProductById(id: string): Promise<ProductDTO | null> {
     collection: p.collection,
     variants: p.variants.map((v) => toVariantDTO(v, p.basePrice)),
     images: p.images.map(toImageDTO),
-  };
+  }
 }
