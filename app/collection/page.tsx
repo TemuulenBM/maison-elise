@@ -5,13 +5,13 @@ import { Footer } from "@/components/footer"
 import { getProducts } from "@/lib/products"
 import { toDisplayProduct } from "@/lib/adapters"
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: "Collection | Maison Élise",
   description:
     "Browse our complete collection of luxury leather handbags. Timeless craftsmanship meets contemporary design.",
 }
-
-export const revalidate = 60
 
 export default async function CollectionPage({
   searchParams,

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { waitlistSchema } from "@/lib/validators/waitlist";
+import { resend, FROM_EMAIL } from "@/lib/resend";
+import { waitlistNotificationHtml, waitlistNotificationText } from "@/emails/waitlist-notification";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -18,7 +20,7 @@ export async function POST(request: NextRequest) {
   // Product байгаа эсэхийг шалгах
   const product = await prisma.product.findUnique({
     where: { id: productId },
-    select: { id: true },
+    select: { id: true, name: true, slug: true },
   });
 
   if (!product) {
@@ -31,6 +33,20 @@ export async function POST(request: NextRequest) {
     update: { name },
     create: { productId, email, name },
   });
+
+  // Шинэ бүртгэл байвал confirmation email явуулна
+  const isNew = entry.createdAt.getTime() === entry.createdAt.getTime();
+  if (isNew) {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: email,
+      subject: `You're on the list — ${product.name} | Maison Élise`,
+      html: waitlistNotificationHtml({ name, email, productName: product.name, productSlug: product.slug }),
+      text: waitlistNotificationText({ name, email, productName: product.name, productSlug: product.slug }),
+    }).catch(() => {
+      // Email алдаа нь API response-г амжилтгүй болгохгүй
+    });
+  }
 
   return NextResponse.json(
     { id: entry.id, message: "Successfully joined waitlist" },

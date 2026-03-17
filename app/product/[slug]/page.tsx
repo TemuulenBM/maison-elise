@@ -57,8 +57,36 @@ export default async function ProductPage({
     .filter((p) => p.slug !== slug)
     .map(toDisplayProduct)
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://maison-elise.com"
+  const primaryImage =
+    dto.images.find((i) => i.isPrimary)?.url ?? dto.variants[0]?.images[0]?.url
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: dto.name,
+    description: dto.description ?? `${dto.name} — Luxury leather handbag by Maison Élise`,
+    image: primaryImage ? [primaryImage] : [],
+    brand: { "@type": "Brand", name: "Maison Élise" },
+    url: `${SITE_URL}/product/${dto.slug}`,
+    offers: dto.variants.map((v) => ({
+      "@type": "Offer",
+      price: (v.price / 100).toFixed(2),
+      priceCurrency: "USD",
+      availability:
+        v.available > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      url: `${SITE_URL}/product/${dto.slug}`,
+    })),
+  }
+
   return (
     <main className="min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
       <ProductDetail product={product} />
       <RelatedProducts products={relatedProducts} />

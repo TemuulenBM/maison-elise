@@ -8,5 +8,8 @@ node_modules/
 .next/
 .env
 .env*.local
+
+# Claude local settings (machine-specific overrides)
+.claude/settings.local.json
 .DS_Store
 /lib/generated/prisma

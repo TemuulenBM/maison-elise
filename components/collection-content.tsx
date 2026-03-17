@@ -47,7 +47,7 @@ const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.06,
+      staggerChildren: 0.08, // PDF 8.2 spec
     },
   },
 }
@@ -57,7 +57,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] as const },
+    transition: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] as const }, // PDF 8.2 spec
   },
 }
 

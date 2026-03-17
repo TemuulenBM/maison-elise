@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
+import { resend, FROM_EMAIL } from "@/lib/resend";
+import { orderConfirmationHtml, orderConfirmationText } from "@/emails/order-confirmation";
+import type { VariantAttributes } from "@/types";
 import Stripe from "stripe";
 
 export async function POST(request: NextRequest) {
@@ -36,7 +39,19 @@ export async function POST(request: NextRequest) {
       // Idempotency: зөвхөн PENDING order-ийг process хийх
       const order = await prisma.order.findUnique({
         where: { id: orderId },
-        include: { items: true },
+        include: {
+          items: {
+            include: {
+              variant: {
+                include: {
+                  product: { select: { name: true, slug: true, edition: true } },
+                  images: { orderBy: { sortOrder: "asc" }, take: 1 },
+                },
+              },
+            },
+          },
+          user: { select: { fullName: true, id: true } },
+        },
       });
 
       if (!order || order.status !== "PENDING") {
@@ -64,6 +79,51 @@ export async function POST(request: NextRequest) {
       // Cart устгах
       if (cartId) {
         await prisma.cart.delete({ where: { id: cartId } }).catch(() => {});
+      }
+
+      // Хэрэглэгчийн email авах
+      const { createServiceClient } = await import("@/lib/supabase");
+      const supabaseAdmin = createServiceClient();
+      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(order.userId);
+      const customerEmail = authUser?.user?.email;
+
+      if (customerEmail) {
+        const shippingAddress = order.shippingAddress as Record<string, string>;
+        const emailItems = order.items.map((item) => ({
+          name: item.variant.product.name,
+          edition: item.variant.product.edition,
+          color: (item.variant.attributes as unknown as VariantAttributes)?.color,
+          quantity: item.quantity,
+          priceAtPurchase: item.priceAtPurchase,
+        }));
+
+        await resend.emails.send({
+          from: FROM_EMAIL,
+          to: customerEmail,
+          subject: `Order Confirmed — Maison Élise`,
+          html: orderConfirmationHtml({
+            orderId: order.id,
+            customerName: order.user.fullName ?? undefined,
+            customerEmail,
+            items: emailItems,
+            totalAmount: order.totalAmount,
+            shippingAddress,
+            giftPackaging: order.giftPackaging,
+            giftNote: order.giftNote,
+          }),
+          text: orderConfirmationText({
+            orderId: order.id,
+            customerName: order.user.fullName ?? undefined,
+            customerEmail,
+            items: emailItems,
+            totalAmount: order.totalAmount,
+            shippingAddress,
+            giftPackaging: order.giftPackaging,
+            giftNote: order.giftNote,
+          }),
+        }).catch(() => {
+          // Email алдаа нь webhook-ийг амжилтгүй болгохгүй
+        });
       }
 
       break;

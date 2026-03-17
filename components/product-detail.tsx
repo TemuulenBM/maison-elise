@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ChevronLeft, ChevronRight, Box, Truck, RotateCcw, Pen } from "lucide-react"
 import { useCart } from "@/context/cart-context"
+import { ImageZoom } from "@/components/product/image-zoom"
 import type { DisplayProduct } from "@/lib/adapters"
 
 const tabs = [
@@ -37,16 +37,13 @@ export function ProductDetail({ product }: { product: DisplayProduct }) {
         {/* Left - Images */}
         <div className="relative bg-card">
           <div className="aspect-[3/4] lg:aspect-auto lg:h-screen lg:sticky lg:top-0">
-            <ImageWithSkeleton
+            <ImageZoom
               src={selectedColor?.image || product.image}
               alt={product.name}
-              fill
-              className="object-cover"
-              priority
             />
 
             {/* Image Navigation */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 pointer-events-auto">
               <button
                 type="button"
                 onClick={() => setCurrentImageIndex(Math.max(0, currentImageIndex - 1))}
