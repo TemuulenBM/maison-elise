@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Heart, ChevronLeft, ChevronRight, Box, Truck, RotateCcw, Pen } from "lucide-react"
 import { useCart } from "@/context/cart-context"
@@ -23,6 +23,42 @@ export function ProductDetail({ product }: { product: DisplayProduct }) {
   const [monogramFont, setMonogramFont] = useState<"classic" | "script">("classic")
   const [monogramPosition, setMonogramPosition] = useState<"front" | "interior">("front")
   const { addToCart } = useCart()
+  const [isWishlisted, setIsWishlisted] = useState(false)
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false)
+
+  const currentVariantId = product.variantMap[selectedColor.name] ?? product.defaultVariantId
+
+  useEffect(() => {
+    if (!currentVariantId) return
+    fetch("/api/wishlist")
+      .then((r) => r.json())
+      .then((items: { id: string; variantId: string }[]) => {
+        const found = items.find((i) => i.variantId === currentVariantId)
+        setIsWishlisted(!!found)
+      })
+      .catch(() => {})
+  }, [currentVariantId])
+
+  async function handleWishlistToggle() {
+    if (!currentVariantId || isWishlistLoading) return
+    setIsWishlistLoading(true)
+    try {
+      const res = await fetch("/api/wishlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ variantId: currentVariantId }),
+      })
+      const data = await res.json()
+      if (data.action === "added") {
+        setIsWishlisted(true)
+        setWishlistItemId(data.id)
+      } else {
+        setIsWishlisted(false)
+        setWishlistItemId(null)
+      }
+    } catch {}
+    setIsWishlistLoading(false)
+  }
 
   const tabContent = {
     description: product.description,
@@ -233,8 +269,14 @@ export function ProductDetail({ product }: { product: DisplayProduct }) {
             >
               Add to My Selection
             </button>
-            <button type="button" className="p-4 border border-border text-foreground hover:text-primary hover:border-primary transition-colors">
-              <Heart className="w-5 h-5" />
+            <button
+              type="button"
+              onClick={handleWishlistToggle}
+              disabled={isWishlistLoading}
+              className="p-4 border border-border text-foreground hover:text-primary hover:border-primary transition-colors disabled:opacity-50"
+              aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            >
+              <Heart className={`w-5 h-5 transition-colors ${isWishlisted ? "fill-primary text-primary" : ""}`} />
             </button>
           </div>
 
