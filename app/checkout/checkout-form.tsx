@@ -279,7 +279,7 @@ function CheckoutFormInner() {
                   <p className="text-[12px] text-red-200 leading-relaxed">{errorMessage}</p>
                   {errorMessage.includes("return to your cart") && (
                     <Link
-                      href="/"
+                      href="/cart"
                       className="text-[11px] text-primary underline underline-offset-2 mt-1 inline-block"
                     >
                       Return to Cart

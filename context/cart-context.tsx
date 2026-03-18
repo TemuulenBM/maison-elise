@@ -129,12 +129,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if (!res.ok) {
           const data = await res.json().catch(() => ({}))
           setError(data.error ?? "Failed to add item to cart")
+          setIsOpen(true)
           return
         }
         refreshCart(await res.json())
         setIsOpen(true)
       } catch {
         setError("Network error — please try again")
+        setIsOpen(true)
       }
     },
     [refreshCart]

@@ -148,13 +148,13 @@ export function CartSidebar() {
             >
               Continue to Checkout
             </Link>
-            <button
-              type="button"
+            <Link
+              href="/cart"
               onClick={closeCart}
-              className="w-full py-3 border border-border text-foreground text-[11px] tracking-[0.15em] uppercase hover:border-primary hover:text-primary transition-colors"
+              className="block w-full py-3 border border-border text-foreground text-[11px] tracking-[0.15em] uppercase hover:border-primary hover:text-primary transition-colors text-center"
             >
-              Continue Browsing
-            </button>
+              View Bag
+            </Link>
           </div>
         )}
       </SheetContent>
