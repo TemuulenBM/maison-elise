@@ -152,6 +152,35 @@ export interface ShippingAddressDTO {
   phone?: string;
 }
 
+// ─── Editorial / Lookbook (Sanity CMS + DB hotspots) ───
+
+export interface LookbookDoc {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  publishedAt: string | null;
+  season: string | null;
+  mainImageUrl: string;
+}
+
+export interface EditorialHotspotData {
+  id: string;
+  positionX: number;
+  positionY: number;
+  product: {
+    id: string;
+    name: string;
+    slug: string;
+    price: number; // доллар (cents / 100)
+    imageUrl: string;
+  };
+}
+
+export interface EditorialPageData extends LookbookDoc {
+  hotspots: EditorialHotspotData[];
+}
+
 // ─── Utility: цент → доллар хөрвүүлэх ───
 
 export function formatPrice(cents: number): string {

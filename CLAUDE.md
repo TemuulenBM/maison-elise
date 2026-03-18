@@ -74,6 +74,10 @@ Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (A
 - `/admin/products` — product list with expandable variant inventory editor
 - `/api/admin/orders/[id]` — `PATCH` update order status (admin only)
 - `/api/admin/products/[id]/inventory` — `PATCH` update variant stock quantity (admin only)
+- `/lookbook` — lookbook list page (Sanity CMS content, ISR 1h)
+- `/lookbook/[slug]` — interactive editorial detail page with shoppable hotspot pins (Sanity + DB `editorial_hotspots`)
+- `/api/editorial/[slug]` — `GET` combined editorial content from Sanity + DB hotspots with product data
+- `/studio` — embedded Sanity Studio for content management (`NEXT_PUBLIC_SANITY_PROJECT_ID` required)
 
 ### Data Flow (Dual-Layer)
 The project is mid-migration between two data architectures:
@@ -97,6 +101,10 @@ The project is mid-migration between two data architectures:
 - `components/providers.tsx` — client-side provider wrapper (AuthProvider → CartProvider)
 - `hooks/use-mobile.ts`, `hooks/use-toast.ts` — custom React hooks
 - `supabase/config.toml` — Supabase CLI local development config (project_id: maison-elise, API port: 54321)
+- `lib/sanity.ts` — Sanity CMS client (next-sanity `createClient`) + `urlFor()` image URL builder
+- `lib/sanity-queries.ts` — GROQ queries for lookbook content
+- `sanity.config.ts` — Sanity Studio config (basePath: `/studio`, schema: lookbook)
+- `sanity/schemas/` — Sanity document schemas (`lookbook`)
 
 ## Design System
 

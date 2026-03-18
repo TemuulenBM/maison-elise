@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Link from "next/link"
 import { ImageWithSkeleton } from "./image-with-skeleton"
 
 export function EditorialSection() {
@@ -57,6 +58,16 @@ export function EditorialSection() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
         </div>
+      </div>
+
+      {/* Lookbook CTA */}
+      <div className="flex justify-center py-8">
+        <Link
+          href="/lookbook"
+          className="font-[var(--font-sans)] text-[11px] uppercase tracking-[0.3em] text-[#C9A96E] transition-opacity hover:opacity-70"
+        >
+          Explore Lookbook →
+        </Link>
       </div>
     </section>
   )
