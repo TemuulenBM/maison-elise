@@ -53,7 +53,6 @@ export function ProductDetail({ product }: { product: DisplayProduct }) {
         setIsWishlisted(true)
       } else {
         setIsWishlisted(false)
-        setWishlistItemId(null)
       }
     } catch {}
     setIsWishlistLoading(false)
