@@ -102,7 +102,7 @@ export default async function LookbookDetailPage({ params }: PageProps) {
         <div className="px-6 py-6">
           <Link
             href="/lookbook"
-            className="font-[var(--font-sans)] text-[10px] uppercase tracking-[0.25em] text-foreground/40 transition-colors hover:text-[#C9A96E]"
+            className="font-[var(--font-sans)] text-[10px] uppercase tracking-[0.25em] text-foreground/40 transition-colors hover:text-primary"
           >
             ← Lookbook
           </Link>
@@ -121,7 +121,7 @@ export default async function LookbookDetailPage({ params }: PageProps) {
                 priority
               />
             ) : (
-              <div className="h-full w-full bg-[#1A1A1A]" />
+              <div className="h-full w-full bg-surface-3" />
             )}
 
             {/* Interactive hotspot pins */}
@@ -134,7 +134,7 @@ export default async function LookbookDetailPage({ params }: PageProps) {
         {/* Editorial info */}
         <div className="mx-auto max-w-2xl px-6 py-12 text-center">
           {data.season && (
-            <p className="mb-3 font-[var(--font-sans)] text-[10px] uppercase tracking-[0.3em] text-[#C9A96E]">
+            <p className="mb-3 font-[var(--font-sans)] text-[10px] uppercase tracking-[0.3em] text-primary">
               {data.season}
             </p>
           )}
@@ -159,7 +159,7 @@ export default async function LookbookDetailPage({ params }: PageProps) {
                 <Link
                   key={hotspot.id}
                   href={`/product/${hotspot.product.slug}`}
-                  className="group border border-white/10 p-3 transition-colors hover:border-[#C9A96E]/40"
+                  className="group border border-border p-3 transition-colors hover:border-primary/40"
                 >
                   {hotspot.product.imageUrl && (
                     <div className="relative mb-3 aspect-square overflow-hidden">
@@ -175,7 +175,7 @@ export default async function LookbookDetailPage({ params }: PageProps) {
                   <p className="truncate font-[var(--font-sans)] text-[10px] uppercase tracking-widest text-foreground">
                     {hotspot.product.name}
                   </p>
-                  <p className="mt-1 font-[var(--font-sans)] text-xs text-[#C9A96E]">
+                  <p className="mt-1 font-[var(--font-sans)] text-xs text-primary">
                     ${hotspot.product.price.toLocaleString()}
                   </p>
                 </Link>

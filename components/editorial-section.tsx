@@ -40,7 +40,7 @@ export function EditorialSection() {
             src="/images/editorial-1.jpg"
             alt="Fashion editorial"
             fill
-            className="object-cover hover:scale-105 transition-transform duration-[2s]"
+            className="object-cover hover:scale-[1.03] transition-transform duration-700"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
         </div>
@@ -55,7 +55,7 @@ export function EditorialSection() {
             src="/images/editorial-2.jpg"
             alt="Fashion editorial"
             fill
-            className="object-cover hover:scale-105 transition-transform duration-[2s]"
+            className="object-cover hover:scale-[1.03] transition-transform duration-700"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
         </div>

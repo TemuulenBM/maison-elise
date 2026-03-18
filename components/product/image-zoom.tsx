@@ -37,8 +37,11 @@ export function ImageZoom({ src, alt }: ImageZoomProps) {
       >
         <motion.div
           className="w-full h-full"
-          animate={isHovered ? { scale: 1.03 } : { scale: 1 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
+          initial={{ opacity: 0, filter: "blur(8px)" }}
+          animate={isHovered
+            ? { scale: 1.03, opacity: 1, filter: "blur(0px)" }
+            : { scale: 1, opacity: 1, filter: "blur(0px)" }}
+          transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <Image src={src} alt={alt} fill className="object-cover" />
         </motion.div>

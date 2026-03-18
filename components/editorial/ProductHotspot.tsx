@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import type { EditorialHotspotData } from "@/types";
 
 interface ProductHotspotProps {
@@ -45,45 +46,51 @@ export function ProductHotspot({ hotspot }: ProductHotspotProps) {
         className="relative flex h-8 w-8 items-center justify-center"
       >
         {/* Пульс анимаци */}
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#C9A96E] opacity-40" />
-        <span className="relative flex h-4 w-4 rounded-full border-2 border-[#C9A96E] bg-background" />
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-40" />
+        <span className="relative flex h-4 w-4 rounded-full border-2 border-primary bg-background" />
       </button>
 
       {/* Бүтээгдэхүүний card popup */}
-      {isOpen && (
-        <div
-          className={`absolute ${popupTop} ${popupLeft} w-56 border border-white/10 bg-[#1A1A1A] p-3 shadow-2xl`}
-        >
-          <div className="flex gap-3">
-            {hotspot.product.imageUrl && (
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden">
-                <Image
-                  src={hotspot.product.imageUrl}
-                  alt={hotspot.product.name}
-                  fill
-                  className="object-cover"
-                  sizes="64px"
-                />
-              </div>
-            )}
-            <div className="flex flex-col justify-center gap-1 overflow-hidden">
-              <p className="truncate font-[var(--font-sans)] text-xs font-medium uppercase tracking-widest text-foreground">
-                {hotspot.product.name}
-              </p>
-              <p className="font-[var(--font-sans)] text-xs text-[#C9A96E]">
-                ${hotspot.product.price.toLocaleString()}
-              </p>
-            </div>
-          </div>
-          <Link
-            href={`/product/${hotspot.product.slug}`}
-            className="mt-3 block w-full border border-[#C9A96E] py-1.5 text-center font-[var(--font-sans)] text-[10px] uppercase tracking-[0.2em] text-[#C9A96E] transition-colors hover:bg-[#C9A96E] hover:text-background"
-            onClick={() => setIsOpen(false)}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 4 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 4 }}
+            transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+            className={`absolute ${popupTop} ${popupLeft} w-56 border border-border bg-surface-3 p-3 shadow-2xl`}
           >
-            View Product
-          </Link>
-        </div>
-      )}
+            <div className="flex gap-3">
+              {hotspot.product.imageUrl && (
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden">
+                  <Image
+                    src={hotspot.product.imageUrl}
+                    alt={hotspot.product.name}
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
+                </div>
+              )}
+              <div className="flex flex-col justify-center gap-1 overflow-hidden">
+                <p className="truncate font-[var(--font-sans)] text-xs font-medium uppercase tracking-widest text-foreground">
+                  {hotspot.product.name}
+                </p>
+                <p className="font-[var(--font-sans)] text-xs text-primary">
+                  ${hotspot.product.price.toLocaleString()}
+                </p>
+              </div>
+            </div>
+            <Link
+              href={`/product/${hotspot.product.slug}`}
+              className="mt-3 block w-full border border-primary py-1.5 text-center font-[var(--font-sans)] text-[10px] uppercase tracking-[0.2em] text-primary transition-colors hover:bg-primary hover:text-background"
+              onClick={() => setIsOpen(false)}
+            >
+              View Product
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

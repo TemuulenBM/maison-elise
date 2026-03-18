@@ -89,7 +89,7 @@ export function BrandStory() {
                 src="/images/editorial-2.jpg"
                 alt="Maison Élise craftsmanship"
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
+                className="object-cover hover:scale-[1.03] transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/10 to-transparent" />
 

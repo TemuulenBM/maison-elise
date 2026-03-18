@@ -130,7 +130,8 @@ export default function SizeGuidePage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {CHAIN_LENGTHS.map((item) => (
-                <div key={item.style} className="border border-border p-6">
+                <div key={item.style} className="border border-[#2A2A28] p-px">
+                <div className="border border-white/5 bg-surface-2 p-6">
                   <p className="text-[11px] uppercase tracking-[0.15em] text-primary mb-2">
                     {item.style}
                   </p>
@@ -139,12 +140,14 @@ export default function SizeGuidePage() {
                   </p>
                   <p className="text-[12px] text-muted-foreground">{item.notes}</p>
                 </div>
+                </div>
               ))}
             </div>
           </section>
 
           {/* Material Care Note */}
-          <section className="border border-border p-8 mb-16">
+          <section className="border border-[#2A2A28] p-px mb-16">
+          <div className="border border-white/5 bg-surface-2 p-8">
             <h2 className="font-serif text-xl text-foreground font-light tracking-[0.04em] mb-4">
               Material & Care
             </h2>
@@ -170,6 +173,7 @@ export default function SizeGuidePage() {
                 </p>
               </div>
             </div>
+          </div>
           </section>
 
           {/* Need help */}

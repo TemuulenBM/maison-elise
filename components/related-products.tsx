@@ -59,16 +59,18 @@ export function RelatedProducts({ products }: { products: DisplayProduct[] }) {
               style={{ transitionDelay: `${Math.min(index * 80, 300)}ms` }}
             >
               {/* Product Image */}
+              <div className="border border-[#2A2A28] p-px mb-4">
+                <div className="border border-white/5">
               <Link
                 href={`/product/${product.id}`}
-                className="relative block bg-card overflow-hidden mb-4 aspect-square"
+                className="relative block bg-card overflow-hidden aspect-square"
               >
                 {/* Primary Image */}
                 <ImageWithSkeleton
                   src={product.image}
                   alt={product.name}
                   fill
-                  className="object-cover transition-all duration-700 group-hover:scale-105"
+                  className="object-cover transition-all duration-700 group-hover:scale-[1.03]"
                 />
 
                 {/* Hover Image — second color */}
@@ -77,7 +79,7 @@ export function RelatedProducts({ products }: { products: DisplayProduct[] }) {
                     src={product.colors[1].image}
                     alt={`${product.name} - ${product.colors[1].name}`}
                     fill
-                    className="object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-105"
+                    className="object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-[1.03]"
                   />
                 )}
 
@@ -109,6 +111,8 @@ export function RelatedProducts({ products }: { products: DisplayProduct[] }) {
                   </button>
                 </div>
               </Link>
+                </div>
+              </div>
 
               {/* Product Info */}
               <div className="space-y-1">
