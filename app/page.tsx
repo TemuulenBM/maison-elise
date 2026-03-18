@@ -22,7 +22,7 @@ export default async function Home() {
   const products = dtos.map(toDisplayProduct)
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-dvh bg-background">
       <Header />
       <HeroSection />
       <CategoryTypography />

@@ -128,7 +128,7 @@ export function BestsellersGrid({ products }: { products: DisplayProduct[] }) {
                       e.preventDefault()
                       e.stopPropagation()
                     }}
-                    className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:text-primary transition-colors"
+                    className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
                   >
                     <Heart className="w-4 h-4" />
                   </button>
@@ -137,7 +137,7 @@ export function BestsellersGrid({ products }: { products: DisplayProduct[] }) {
 
               {/* Product Info */}
               <div className="space-y-1">
-                <p className="text-[11px] tracking-[0.1em] text-foreground uppercase group-hover:text-primary transition-colors duration-500">
+                <p className="text-[11px] tracking-[0.15em] text-foreground uppercase group-hover:text-primary transition-colors duration-500">
                   {product.name}
                 </p>
                 <p className="text-[10px] tracking-[0.05em] text-text-tertiary uppercase">

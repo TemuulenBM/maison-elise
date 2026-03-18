@@ -56,7 +56,7 @@ export function CategoryTypography() {
             <Link
               key={category.name}
               href={category.href}
-              className={`group relative block text-center py-8 lg:py-12 transition-all duration-700 hover:-translate-y-0.5 ${
+              className={`group relative block text-center py-8 lg:py-12 transition-all duration-700 hover:-translate-y-1 ${
                 isVisible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-4"

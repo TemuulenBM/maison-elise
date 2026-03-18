@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import { ImageWithSkeleton } from "./image-with-skeleton"
 
 export function EditorialSection() {
@@ -64,9 +65,10 @@ export function EditorialSection() {
       <div className="flex justify-center py-8">
         <Link
           href="/lookbook"
-          className="font-[var(--font-sans)] text-[11px] uppercase tracking-[0.3em] text-[#C9A96E] transition-opacity hover:opacity-70"
+          className="inline-flex items-center gap-2 font-sans text-[11px] uppercase tracking-[0.3em] text-primary hover:opacity-80 transition-opacity group"
         >
-          Explore Lookbook →
+          Explore Lookbook
+          <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
     </section>

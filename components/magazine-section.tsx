@@ -53,27 +53,29 @@ export function MagazineSection() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            <p className="text-[11px] tracking-[0.2em] text-text-tertiary uppercase mb-6">
-              CYME TOTE & CYME TOTE NANO
-            </p>
+            <div className="border-l border-primary/30 pl-6">
+              <p className="text-[11px] tracking-[0.2em] text-text-tertiary uppercase mb-6">
+                CYME TOTE & CYME TOTE NANO
+              </p>
 
-            <h2 className="font-serif text-3xl lg:text-4xl text-foreground mb-6 leading-tight">
-              Longue Vue, the magazine where a closer look broadens the horizon.
-            </h2>
+              <h2 className="font-serif text-3xl lg:text-4xl text-foreground mb-6 leading-tight">
+                Longue Vue, the magazine where a closer look broadens the horizon.
+              </h2>
 
-            <p className="text-[15px] text-text-tertiary leading-relaxed mb-8 font-sans">
-              In its annual publication Longue Vue, Maison Élise shines the spotlight on its creative
-              adventures. The first edition, &ldquo;Play of Perspectives&rdquo;, uses words, illustrations,
-              photographs, and even maps to look back on the year&apos;s explorations.
-            </p>
+              <p className="text-[15px] text-text-tertiary leading-relaxed mb-8 font-sans">
+                In its annual publication Longue Vue, Maison Élise shines the spotlight on its creative
+                adventures. The first edition, &ldquo;Play of Perspectives&rdquo;, uses words, illustrations,
+                photographs, and even maps to look back on the year&apos;s explorations.
+              </p>
 
-            <Link
-              href="/collection"
-              className="inline-flex items-center gap-3 text-[11px] tracking-[0.15em] text-foreground uppercase hover:text-primary transition-colors group"
-            >
-              Explore Longue Vue
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+              <Link
+                href="/collection"
+                className="inline-flex items-center gap-3 text-[11px] tracking-[0.15em] text-foreground uppercase hover:text-primary transition-colors group"
+              >
+                Explore Longue Vue
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

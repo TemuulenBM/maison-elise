@@ -64,7 +64,11 @@ export function HeroSection() {
           <div className="flex flex-col items-center gap-2">
             <span className="text-[10px] tracking-[0.2em] text-text-tertiary uppercase">Scroll</span>
             <div className="w-[1px] h-8 bg-border relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1/2 bg-primary animate-bounce" />
+              <motion.div
+                className="absolute top-0 left-0 w-full h-1/2 bg-primary"
+                animate={{ y: ["0%", "100%", "0%"] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              />
             </div>
           </div>
         </motion.div>

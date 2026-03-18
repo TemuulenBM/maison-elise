@@ -72,7 +72,11 @@ export function InstagramSection() {
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-background/0 group-hover:bg-background/40 transition-colors duration-500" />
+              <div className="absolute inset-0 bg-background/0 group-hover:bg-background/40 transition-colors duration-500 flex items-center justify-center">
+                <span className="text-[10px] tracking-[0.2em] text-foreground uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  @maison_elise
+                </span>
+              </div>
             </div>
           ))}
         </div>
