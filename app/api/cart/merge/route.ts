@@ -42,33 +42,35 @@ export async function POST() {
     })
   }
 
-  // Guest item бүрийг user cart-руу шилжүүлэх
+  // Guest item бүрийг user cart-руу шилжүүлэх (atomic transaction)
   let merged = 0
-  for (const guestItem of guestCart.items) {
-    const existing = userCart.items.find(
-      (i) => i.variantId === guestItem.variantId
-    )
+  await prisma.$transaction(async (tx) => {
+    for (const guestItem of guestCart.items) {
+      const existing = userCart.items.find(
+        (i) => i.variantId === guestItem.variantId
+      )
 
-    if (existing) {
-      await prisma.cartItem.update({
-        where: { id: existing.id },
-        data: { quantity: existing.quantity + guestItem.quantity },
-      })
-    } else {
-      await prisma.cartItem.create({
-        data: {
-          cartId: userCart.id,
-          variantId: guestItem.variantId,
-          quantity: guestItem.quantity,
-          priceAtAdd: guestItem.priceAtAdd,
-        },
-      })
+      if (existing) {
+        await tx.cartItem.update({
+          where: { id: existing.id },
+          data: { quantity: existing.quantity + guestItem.quantity },
+        })
+      } else {
+        await tx.cartItem.create({
+          data: {
+            cartId: userCart.id,
+            variantId: guestItem.variantId,
+            quantity: guestItem.quantity,
+            priceAtAdd: guestItem.priceAtAdd,
+          },
+        })
+      }
+      merged++
     }
-    merged++
-  }
 
-  // Guest cart устгах
-  await prisma.cart.delete({ where: { id: guestCart.id } })
+    // Guest cart устгах — items migration-тай нэг transaction-д
+    await tx.cart.delete({ where: { id: guestCart.id } })
+  })
 
   return NextResponse.json({ merged })
 }
