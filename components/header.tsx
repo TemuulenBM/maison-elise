@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { Heart, Menu, X, ChevronDown, LogOut, User, Package } from "lucide-react"
+import { AnimatePresence, motion } from "framer-motion"
 import { MegaMenu } from "./mega-menu"
 import { CartSidebar } from "./cart-sidebar"
 import { useCart } from "@/context/cart-context"
@@ -132,7 +133,7 @@ export function Header() {
                       <DropdownMenuTrigger asChild>
                         <button
                           type="button"
-                          className="w-8 h-8 flex items-center justify-center bg-primary text-background text-[11px] font-medium hover:bg-primary/90 transition-colors"
+                          className="w-8 h-8 flex items-center justify-center bg-primary text-background text-[11px] font-medium hover:bg-primary/90 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-2"
                           aria-label="Account menu"
                         >
                           {userInitial}
@@ -232,8 +233,15 @@ export function Header() {
       <CartSidebar />
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-background pt-24 px-6 lg:hidden">
+      <AnimatePresence>
+        {mobileMenuOpen && (
+        <motion.div
+          className="fixed inset-0 z-40 bg-background pt-24 px-6 lg:hidden"
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+        >
           <div className="flex flex-col gap-6">
             {navItems.map((item) => (
               <Link
@@ -290,8 +298,9 @@ export function Header() {
               SEARCH
             </Link>
           </div>
-        </div>
-      )}
+        </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

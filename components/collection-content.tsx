@@ -44,20 +44,22 @@ const sortOptions = [
 ]
 
 const containerVariants = {
-  hidden: {},
+  hidden: { opacity: 0 },
   visible: {
+    opacity: 1,
     transition: {
-      staggerChildren: 0.08, // PDF 8.2 spec
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
     },
   },
 }
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 32 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] as const }, // PDF 8.2 spec
+    transition: { duration: 1.1, ease: [0.25, 0.1, 0.25, 1] as const },
   },
 }
 
@@ -389,53 +391,73 @@ export function CollectionContent({
                       key={product.id}
                       variants={itemVariants}
                       className="group"
+                      whileHover={{ y: -6 }}
+                      transition={{ type: "spring", stiffness: 260, damping: 24 }}
                       onMouseEnter={() => setHoveredProduct(product.id)}
                       onMouseLeave={() => setHoveredProduct(null)}
                     >
                       <Link href={`/product/${product.id}`}>
-                        <div className="relative bg-card overflow-hidden mb-4 cursor-pointer aspect-square">
-                          <ImageWithSkeleton
-                            src={product.image}
-                            alt={product.name}
-                            fill
-                            className="object-cover transition-all duration-700 group-hover:scale-105"
-                          />
-
-                          {product.colors[1] && (
-                            <Image
-                              src={product.colors[1].image}
-                              alt={`${product.name} - ${product.colors[1].name}`}
-                              fill
-                              className="object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-105"
-                            />
-                          )}
-
-                          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                          <div className="absolute bottom-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.preventDefault()
-                                addToCart(product.defaultVariantId)
-                              }}
-                              className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
+                        {/* Double-bezel */}
+                        <div className="border border-[#2A2A28] p-px mb-4">
+                          <div className="border border-white/5 relative bg-card overflow-hidden cursor-pointer aspect-square">
+                            {/* Images inside motion.div for spring scale */}
+                            <motion.div
+                              className="absolute inset-0"
+                              whileHover={{ scale: 1.03 }}
+                              transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
                             >
-                              <ShoppingBag className="w-4 h-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => e.preventDefault()}
-                              className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:text-primary transition-colors"
-                            >
-                              <Heart className="w-4 h-4" />
-                            </button>
+                              <ImageWithSkeleton
+                                src={product.image}
+                                alt={product.name}
+                                fill
+                                className="object-cover"
+                              />
+                              {product.colors[1] && (
+                                <Image
+                                  src={product.colors[1].image}
+                                  alt={`${product.name} - ${product.colors[1].name}`}
+                                  fill
+                                  className="object-cover transition-opacity duration-700 opacity-0 group-hover:opacity-100"
+                                />
+                              )}
+                            </motion.div>
+
+                            {/* Gradient overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+
+                            {/* Slide-up editorial bar */}
+                            <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 px-4 pt-8 pb-4 z-20">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] uppercase tracking-[0.25em] text-white/70">
+                                  Quick Add
+                                </span>
+                                <div className="flex gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      addToCart(product.defaultVariantId)
+                                    }}
+                                    className="p-2 bg-white/10 backdrop-blur-sm text-white hover:bg-primary hover:text-background transition-colors duration-300"
+                                  >
+                                    <ShoppingBag className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => e.preventDefault()}
+                                    className="p-2 bg-white/10 backdrop-blur-sm text-white hover:text-primary transition-colors duration-300"
+                                  >
+                                    <Heart className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </Link>
 
-                      <div className="space-y-1">
-                        <p className="text-[11px] tracking-[0.1em] text-foreground uppercase group-hover:text-primary transition-colors duration-500">
+                      <div className="space-y-1 px-px">
+                        <p className="text-[11px] tracking-[0.15em] text-foreground uppercase group-hover:text-primary transition-colors duration-500">
                           {product.name}
                         </p>
                         <p className="text-[10px] tracking-[0.05em] text-muted-foreground uppercase">

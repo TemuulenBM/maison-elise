@@ -16,7 +16,6 @@ export function ImageWithSkeleton({ className, alt, ...props }: ImageProps) {
         alt={alt ?? ""}
         {...props}
         className={cn(
-          "transition-opacity duration-500",
           loaded ? "opacity-100" : "opacity-0",
           className
         )}

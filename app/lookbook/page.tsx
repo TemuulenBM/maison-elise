@@ -24,7 +24,7 @@ export default async function LookbookPage() {
       <main className="min-h-screen bg-background">
         {/* Page header */}
         <div className="border-b border-white/10 px-6 py-16 text-center">
-          <p className="mb-3 font-[var(--font-sans)] text-xs uppercase tracking-[0.3em] text-[#C9A96E]">
+          <p className="mb-3 font-[var(--font-sans)] text-xs uppercase tracking-[0.3em] text-primary">
             Editorial
           </p>
           <h1 className="font-[Cormorant_Garamond,serif] text-4xl font-light tracking-widest text-foreground md:text-6xl">
@@ -57,7 +57,7 @@ export default async function LookbookPage() {
                     priority={index < 2}
                   />
                 ) : (
-                  <div className="h-full w-full bg-[#1A1A1A]" />
+                  <div className="h-full w-full bg-surface-3" />
                 )}
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
@@ -67,7 +67,7 @@ export default async function LookbookPage() {
                   className="absolute bottom-0 left-0 right-0 translate-y-4 p-8 transition-transform duration-500 group-hover:translate-y-0"
                 >
                   {lookbook.season && (
-                    <p className="mb-2 font-[var(--font-sans)] text-[10px] uppercase tracking-[0.3em] text-[#C9A96E]">
+                    <p className="mb-2 font-[var(--font-sans)] text-[10px] uppercase tracking-[0.3em] text-primary">
                       {lookbook.season}
                     </p>
                   )}
@@ -79,7 +79,7 @@ export default async function LookbookPage() {
                       {lookbook.description}
                     </p>
                   )}
-                  <span className="mt-4 inline-block font-[var(--font-sans)] text-[10px] uppercase tracking-[0.3em] text-[#C9A96E] opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                  <span className="mt-4 inline-block font-[var(--font-sans)] text-[10px] uppercase tracking-[0.3em] text-primary opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     Explore →
                   </span>
                 </div>

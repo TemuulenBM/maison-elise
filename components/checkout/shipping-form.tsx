@@ -71,7 +71,7 @@ function TextInput({
         {...register(name)}
         placeholder={placeholder}
         autoComplete={autoComplete}
-        className="w-full h-12 px-4 bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none transition-colors duration-300"
+        className="w-full h-12 px-4 bg-transparent border border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 hover:border-white/20 focus:border-primary focus:outline-none transition-colors duration-300"
       />
       <FieldError message={error?.message as string} />
     </div>
@@ -149,7 +149,7 @@ export function ShippingForm({ form }: ShippingFormProps) {
               value={country || ""}
               onValueChange={(value) => setValue("country", value, { shouldValidate: true })}
             >
-              <SelectTrigger className="h-12 bg-transparent border-border text-[13px] text-foreground rounded-none focus:ring-0 focus:border-primary transition-colors duration-300">
+              <SelectTrigger className="h-12 bg-transparent border-border text-[13px] text-foreground rounded-none hover:border-white/20 focus:ring-0 focus:border-primary transition-colors duration-300">
                 <SelectValue placeholder="Select country" />
               </SelectTrigger>
               <SelectContent className="bg-[var(--surface-3)] border-border rounded-none">

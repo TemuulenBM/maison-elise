@@ -43,7 +43,7 @@
 }
 
 @theme inline {
-  --font-sans: 'Cormorant Garamond', 'Georgia', serif;
+  --font-sans: 'Montserrat', 'Arial', sans-serif;
   --font-serif: 'Cormorant Garamond', 'Georgia', serif;
   --font-mono: 'JetBrains Mono', monospace;
   --color-background: var(--background);
@@ -173,6 +173,14 @@
 
 @utility animate-scale-in {
   animation: scaleIn 0.6s ease-out forwards;
+}
+
+/* Animation timing tokens */
+:root {
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 700ms;
+  --duration-entrance: 900ms;
 }
 
 @utility text-gold {

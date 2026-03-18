@@ -77,7 +77,7 @@ export function ProductDetail({ product }: { product: DisplayProduct }) {
 
           {/* Product Title */}
           <div className="mb-8">
-            <h1 className="font-serif text-3xl lg:text-4xl text-foreground mb-2">
+            <h1 className="font-serif text-3xl lg:text-4xl tracking-[0.04em] text-foreground mb-2">
               {product.name}
             </h1>
             <p className="text-[13px] text-text-tertiary uppercase tracking-wide mb-4">
