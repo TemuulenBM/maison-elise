@@ -30,3 +30,6 @@ export const imageHover = {
     transition: { duration: 0.7, ease: "easeOut" as const },
   },
 }
+
+// Button click: scale 0.97 over 0.15s (PDF 8.2 spec)
+export const buttonTap = { scale: 0.97, transition: { duration: 0.15 } }
