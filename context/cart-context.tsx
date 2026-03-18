@@ -1,6 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react"
+import { SITE_IMAGES } from "@/lib/site-images"
 
 export interface CartDisplayItem {
   cartItemId: string
@@ -67,7 +68,7 @@ function serverCartToDisplay(serverCart: ServerCart) {
       productEdition: item.variant.product.edition ?? "",
       productSlug: item.variant.product.slug,
       colorName: item.variant.attributes.color,
-      image: item.variant.images[0]?.url ?? "/images/placeholder.jpg",
+      image: item.variant.images[0]?.url ?? SITE_IMAGES.productCyme,
       price: item.priceAtAdd / 100,
       quantity: item.quantity,
     })),

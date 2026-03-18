@@ -1,3 +1,4 @@
+import { SITE_IMAGES } from "@/lib/site-images";
 import type { Product, ProductColor, ProductDTO } from "@/types";
 
 export interface DisplayProduct extends Product {
@@ -9,7 +10,7 @@ export function toDisplayProduct(dto: ProductDTO): DisplayProduct {
   const primaryImage =
     dto.images.find((i) => i.isPrimary)?.url ??
     dto.variants[0]?.images[0]?.url ??
-    "/images/placeholder.jpg";
+    SITE_IMAGES.productCyme;
 
   const colors: ProductColor[] = dto.variants.map((v) => ({
     name: v.attributes.color,

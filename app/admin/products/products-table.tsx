@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import type { Product, ProductVariant } from "@/lib/generated/prisma"
 import type { VariantAttributes } from "@/types"
 
@@ -15,6 +15,8 @@ export function AdminProductsTable({ products }: { products: ProductWithVariants
     return map
   })
   const [saving, setSaving] = useState<string | null>(null)
+  const [uploading, setUploading] = useState<string | null>(null)
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
   async function handleSaveStock(variantId: string) {
     setSaving(variantId)
@@ -26,6 +28,18 @@ export function AdminProductsTable({ products }: { products: ProductWithVariants
       })
     } finally {
       setSaving(null)
+    }
+  }
+
+  async function handleImageUpload(productId: string, variantId: string, file: File) {
+    setUploading(variantId)
+    try {
+      const form = new FormData()
+      form.append("file", file)
+      form.append("variantId", variantId)
+      await fetch(`/api/admin/products/${productId}/image`, { method: "POST", body: form })
+    } finally {
+      setUploading(null)
     }
   }
 
@@ -111,6 +125,25 @@ export function AdminProductsTable({ products }: { products: ProductWithVariants
                             className="px-3 py-1.5 bg-foreground text-background text-[10px] uppercase tracking-[0.1em] hover:bg-primary transition-colors disabled:opacity-50"
                           >
                             {saving === variant.id ? "..." : "Save"}
+                          </button>
+                          {/* Image upload */}
+                          <input
+                            ref={(el) => { fileInputRefs.current[variant.id] = el }}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) handleImageUpload(product.id, variant.id, file)
+                              e.target.value = ""
+                            }}
+                          />
+                          <button
+                            onClick={() => fileInputRefs.current[variant.id]?.click()}
+                            disabled={uploading === variant.id}
+                            className="px-3 py-1.5 border border-border text-[10px] uppercase tracking-[0.1em] text-muted-foreground hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
+                          >
+                            {uploading === variant.id ? "..." : "Image"}
                           </button>
                         </div>
                       </div>

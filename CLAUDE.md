@@ -74,6 +74,7 @@ Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (A
 - `/admin/products` — product list with expandable variant inventory editor
 - `/api/admin/orders/[id]` — `PATCH` update order status (admin only)
 - `/api/admin/products/[id]/inventory` — `PATCH` update variant stock quantity (admin only)
+- `/api/admin/products/[id]/image` — `POST` upload product image to Supabase Storage (admin only, multipart/form-data: `file` + `variantId`)
 - `/lookbook` — lookbook list page (Sanity CMS content, ISR 1h)
 - `/lookbook/[slug]` — interactive editorial detail page with shoppable hotspot pins (Sanity + DB `editorial_hotspots`)
 - `/api/editorial/[slug]` — `GET` combined editorial content from Sanity + DB hotspots with product data

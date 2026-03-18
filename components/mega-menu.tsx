@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ImageWithSkeleton } from "./image-with-skeleton"
+import { SITE_IMAGES } from "@/lib/site-images"
 
 const collections = [
   "Cyme",
@@ -131,7 +132,7 @@ export function MegaMenu() {
           {/* Featured Image */}
           <div className="relative aspect-[4/5] overflow-hidden">
             <ImageWithSkeleton
-              src="/images/product-brown.jpg"
+              src={SITE_IMAGES.productBrown}
               alt="Featured handbag"
               fill
               className="object-cover"

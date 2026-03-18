@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { ImageWithSkeleton } from "./image-with-skeleton"
 import { motion } from "framer-motion"
+import { SITE_IMAGES } from "@/lib/site-images"
 
 export function EditorialSection() {
   return (
@@ -23,7 +24,7 @@ export function EditorialSection() {
             transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <ImageWithSkeleton
-              src="/images/editorial-1.jpg"
+              src={SITE_IMAGES.editorial1}
               alt="Fashion editorial"
               fill
               className="object-cover"
@@ -52,7 +53,7 @@ export function EditorialSection() {
             transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <ImageWithSkeleton
-              src="/images/editorial-2.jpg"
+              src={SITE_IMAGES.editorial2}
               alt="Fashion editorial"
               fill
               className="object-cover"

@@ -1,0 +1,25 @@
+const BASE = "https://qtvmfbicoibfdbhaksoz.supabase.co/storage/v1/object/public/products"
+
+export const SITE_IMAGES = {
+  editorial1: `${BASE}/editorial-1.jpg`,
+  editorial2: `${BASE}/editorial-2.jpg`,
+  editorialAtelier: `${BASE}/editorial-atelier.jpg`,
+  editorialMagazine: `${BASE}/editorial-magazine.jpg`,
+  editorialSpring26: `${BASE}/editorial-spring26.jpg`,
+  heroBag: `${BASE}/hero-bag.jpg`,
+  heroLeft: `${BASE}/hero-left.jpg`,
+  heroModel: `${BASE}/hero-model.jpg`,
+  heroRight: `${BASE}/hero-right.jpg`,
+  instagram1: `${BASE}/instagram-1.jpg`,
+  instagram2: `${BASE}/instagram-2.jpg`,
+  instagram3: `${BASE}/instagram-3.jpg`,
+  instagram4: `${BASE}/instagram-4.jpg`,
+  lifestyleModel: `${BASE}/lifestyle-model.jpg`,
+  magazine: `${BASE}/magazine.jpg`,
+  productBrown: `${BASE}/product-brown.jpg`,
+  productBurgundy: `${BASE}/product-burgundy.jpg`,
+  productCamel: `${BASE}/product-camel.jpg`,
+  productCyme: `${BASE}/product-cyme.jpg`,
+  productModel: `${BASE}/product-model.jpg`,
+  productTaupe: `${BASE}/product-taupe.jpg`,
+} as const

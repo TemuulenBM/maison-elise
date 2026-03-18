@@ -4,12 +4,14 @@ import { ImageWithSkeleton } from "./image-with-skeleton"
 import { ArrowRight, Plus } from "lucide-react"
 import { motion } from "framer-motion"
 
+import { SITE_IMAGES } from "@/lib/site-images"
+
 const images = [
-  { src: "/images/instagram-1.jpg", alt: "Craftsmanship" },
-  { src: "/images/instagram-2.jpg", alt: "Street style" },
-  { src: "/images/instagram-3.jpg", alt: "Accessories" },
-  { src: "/images/instagram-4.jpg", alt: "Boutique" },
-  { src: "/images/editorial-1.jpg", alt: "Editorial" },
+  { src: SITE_IMAGES.instagram1, alt: "Craftsmanship" },
+  { src: SITE_IMAGES.instagram2, alt: "Street style" },
+  { src: SITE_IMAGES.instagram3, alt: "Accessories" },
+  { src: SITE_IMAGES.instagram4, alt: "Boutique" },
+  { src: SITE_IMAGES.editorial1, alt: "Editorial" },
 ]
 
 const container = {

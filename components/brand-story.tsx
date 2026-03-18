@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { ImageWithSkeleton } from "./image-with-skeleton"
+import { SITE_IMAGES } from "@/lib/site-images"
 
 const stats = [
   { value: "50+", label: "Years of Excellence" },
@@ -86,7 +87,7 @@ export function BrandStory() {
           >
             <div className="relative aspect-[3/4] overflow-hidden">
               <ImageWithSkeleton
-                src="/images/editorial-2.jpg"
+                src={SITE_IMAGES.lifestyleModel}
                 alt="Maison Élise craftsmanship"
                 fill
                 className="object-cover hover:scale-[1.03] transition-transform duration-700"

@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { MapPin, Clock, Phone, ArrowRight } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { SITE_IMAGES } from "@/lib/site-images"
 
 const boutiques = [
   {
@@ -15,7 +16,7 @@ const boutiques = [
     address: "24 Rue du Faubourg Saint-Honoré, 75008 Paris",
     hours: "Mon–Sat 10:00–19:00 · Sun 12:00–18:00",
     phone: "+33 1 42 56 78 90",
-    image: "/images/editorial-1.jpg",
+    image: SITE_IMAGES.editorial1,
   },
   {
     city: "Monaco",
@@ -24,7 +25,7 @@ const boutiques = [
     address: "12 Avenue de Monte-Carlo, 98000 Monaco",
     hours: "Mon–Sat 10:00–19:00",
     phone: "+377 93 25 41 60",
-    image: "/images/editorial-2.jpg",
+    image: SITE_IMAGES.editorial2,
   },
   {
     city: "London",
@@ -33,7 +34,7 @@ const boutiques = [
     address: "15 New Bond Street, London W1S 2RE",
     hours: "Mon–Sat 10:00–18:30",
     phone: "+44 20 7629 1234",
-    image: "/images/editorial-magazine.jpg",
+    image: SITE_IMAGES.editorialMagazine,
   },
 ]
 

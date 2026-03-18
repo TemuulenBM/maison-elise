@@ -67,11 +67,6 @@ export function Header() {
     }
   }, [])
 
-  // User-ийн нэрийн эхний үсэг (avatar-д)
-  const userInitial = user?.user_metadata?.full_name
-    ? (user.user_metadata.full_name as string).charAt(0).toUpperCase()
-    : user?.email?.charAt(0).toUpperCase() ?? "?"
-
   return (
     <>
       <header
@@ -143,10 +138,10 @@ export function Header() {
                       <DropdownMenuTrigger asChild>
                         <button
                           type="button"
-                          className="w-8 h-8 flex items-center justify-center bg-primary text-background text-[11px] font-medium hover:bg-primary/90 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary focus-visible:outline-offset-2"
+                          className="w-8 h-8 flex items-center justify-center text-foreground hover:text-primary transition-colors focus-visible:outline-none"
                           aria-label="Account menu"
                         >
-                          {userInitial}
+                          <User className="w-4 h-4" />
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent

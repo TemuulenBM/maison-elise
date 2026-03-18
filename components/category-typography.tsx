@@ -5,25 +5,26 @@ import Link from "next/link"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { useReducedMotion } from "framer-motion"
+import { SITE_IMAGES } from "@/lib/site-images"
 
 const categories = [
   {
     name: "HANDBAGS",
     subtitle: "Totes, Crossbody & Clutches",
     href: "/bags",
-    image: "/images/hero-bag.jpg",
+    image: SITE_IMAGES.heroBag,
   },
   {
     name: "JEWELLERY",
     subtitle: "Rings, Bracelets & Necklaces",
     href: "/jewellery",
-    image: "/images/editorial-1.jpg",
+    image: SITE_IMAGES.editorial1,
   },
   {
     name: "SMALL LEATHER GOODS",
     subtitle: "Wallets, Cardholders & Pouches",
     href: "/accessories",
-    image: "/images/product-model.jpg",
+    image: SITE_IMAGES.productModel,
   },
 ]
 

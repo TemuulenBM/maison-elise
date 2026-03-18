@@ -6,6 +6,7 @@ import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { EASE_LUXURY } from "@/lib/animations"
+import { SITE_IMAGES } from "@/lib/site-images"
 
 export function HeroSection() {
   const containerRef = useRef<HTMLElement>(null)
@@ -23,7 +24,7 @@ export function HeroSection() {
         {/* Background Image with parallax */}
         <motion.div className="absolute inset-0 scale-110" style={{ y: imageY }}>
           <ImageWithSkeleton
-            src="/images/hero-model.jpg"
+            src={SITE_IMAGES.heroModel}
             alt="Luxury bag campaign"
             fill
             className="object-cover"
@@ -84,7 +85,7 @@ export function HeroSection() {
         <div className="flex items-center gap-5 px-6 lg:px-12 py-4">
           <div className="relative w-[60px] h-[60px] shrink-0 overflow-hidden">
             <ImageWithSkeleton
-              src="/images/hero-bag.jpg"
+              src={SITE_IMAGES.heroBag}
               alt="Cyme bag"
               fill
               className="object-cover"

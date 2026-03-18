@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { SITE_IMAGES } from "@/lib/site-images"
 
 export function MagazineSection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -39,8 +40,8 @@ export function MagazineSection() {
           >
             <div className="relative aspect-[3/4] overflow-hidden">
               <ImageWithSkeleton
-                src="/images/editorial-magazine.jpg"
-                alt="Longue Vue Magazine"
+                src={SITE_IMAGES.editorialAtelier}
+                alt="Maison Élise Atelier"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-700"
               />
@@ -55,24 +56,24 @@ export function MagazineSection() {
           >
             <div className="border-l border-primary/30 pl-6">
               <p className="text-[11px] tracking-[0.2em] text-text-tertiary uppercase mb-6">
-                CYME TOTE & CYME TOTE NANO
+                L&apos;ATELIER MAISON ÉLISE
               </p>
 
               <h2 className="font-serif text-3xl lg:text-4xl text-foreground mb-6 leading-tight">
-                Longue Vue, the magazine where a closer look broadens the horizon.
+                Made by hand. Worn for a lifetime.
               </h2>
 
               <p className="text-[15px] text-text-tertiary leading-relaxed mb-8 font-sans">
-                In its annual publication Longue Vue, Maison Élise shines the spotlight on its creative
-                adventures. The first edition, &ldquo;Play of Perspectives&rdquo;, uses words, illustrations,
-                photographs, and even maps to look back on the year&apos;s explorations.
+                Every Maison Élise piece begins with a single length of full-grain leather and the
+                unhurried attention of a master artisan. No shortcuts. No compromise. Only objects
+                that grow more beautiful with each passing year.
               </p>
 
               <Link
                 href="/collection"
                 className="inline-flex items-center gap-3 text-[11px] tracking-[0.15em] text-foreground uppercase hover:text-primary transition-colors group"
               >
-                Explore Longue Vue
+                Discover the Collection
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
