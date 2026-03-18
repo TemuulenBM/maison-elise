@@ -38,9 +38,9 @@ interface CollectionContentProps {
 
 const sortOptions = [
   { value: "newest", label: "Newest" },
-  { value: "price_asc", label: "Price ↑" },
-  { value: "price_desc", label: "Price ↓" },
-  { value: "name_asc", label: "Name A-Z" },
+  { value: "price_asc", label: "Price: Low to High" },
+  { value: "price_desc", label: "Price: High to Low" },
+  { value: "name_asc", label: "Name A–Z" },
 ]
 
 const containerVariants = {
@@ -135,7 +135,6 @@ export function CollectionContent({
   totalPages = 1,
   totalProducts = 0,
 }: CollectionContentProps) {
-  const [, setHoveredProduct] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<"grid" | "compact">("grid")
   const [showFilters, setShowFilters] = useState(false)
   const { addToCart } = useCart()
@@ -193,7 +192,7 @@ export function CollectionContent({
             {/* Sort — desktop */}
             <div className="hidden sm:block">
               <Select value={activeSort} onValueChange={handleSortChange}>
-                <SelectTrigger className="h-8 border-border bg-transparent text-[11px] tracking-[0.1em] text-muted-foreground uppercase rounded-none w-[140px]">
+                <SelectTrigger className="h-8 border-border bg-transparent text-[11px] tracking-[0.1em] text-muted-foreground uppercase rounded-none w-[180px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="rounded-none border-border bg-background">
@@ -282,17 +281,24 @@ export function CollectionContent({
             </Drawer>
 
             {/* View mode toggle */}
-            <button
-              type="button"
-              onClick={() => setViewMode(viewMode === "grid" ? "compact" : "grid")}
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              {viewMode === "grid" ? (
-                <Grid3X3 className="w-4 h-4" />
-              ) : (
+            <div className="flex items-center border border-border">
+              <button
+                type="button"
+                onClick={() => setViewMode("grid")}
+                className={`p-1.5 transition-colors ${viewMode === "grid" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"}`}
+                title="Grid view"
+              >
                 <LayoutGrid className="w-4 h-4" />
-              )}
-            </button>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("compact")}
+                className={`p-1.5 transition-colors ${viewMode === "compact" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"}`}
+                title="Compact view"
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -382,8 +388,12 @@ export function CollectionContent({
                   animate="visible"
                   className={`grid gap-6 ${
                     showFilters
-                      ? "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
-                      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                      ? viewMode === "compact"
+                        ? "grid-cols-2 sm:grid-cols-3 xl:grid-cols-4"
+                        : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+                      : viewMode === "compact"
+                        ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+                        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                   }`}
                 >
                   {products.map((product) => (
@@ -393,34 +403,28 @@ export function CollectionContent({
                       className="group"
                       whileHover={{ y: -6 }}
                       transition={{ type: "spring", stiffness: 260, damping: 24 }}
-                      onMouseEnter={() => setHoveredProduct(product.id)}
-                      onMouseLeave={() => setHoveredProduct(null)}
                     >
                       <Link href={`/product/${product.id}`}>
                         {/* Double-bezel */}
                         <div className="border border-[#2A2A28] p-px mb-4">
-                          <div className="border border-white/5 relative bg-card overflow-hidden cursor-pointer aspect-square">
-                            {/* Images inside motion.div for spring scale */}
-                            <motion.div
-                              className="absolute inset-0"
-                              whileHover={{ scale: 1.03 }}
-                              transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-                            >
+                          <div className={`border border-white/5 relative bg-card overflow-hidden cursor-pointer ${viewMode === "compact" ? "aspect-[3/4]" : "aspect-square"}`}>
+                            {/* Images — scale via CSS to avoid nested whileHover conflict */}
+                            <div className="absolute inset-0">
                               <ImageWithSkeleton
                                 src={product.image}
                                 alt={product.name}
                                 fill
-                                className="object-cover"
+                                className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                               />
                               {product.colors[1] && (
                                 <Image
                                   src={product.colors[1].image}
                                   alt={`${product.name} - ${product.colors[1].name}`}
                                   fill
-                                  className="object-cover transition-opacity duration-700 opacity-0 group-hover:opacity-100"
+                                  className="absolute inset-0 object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-[1.03]"
                                 />
                               )}
-                            </motion.div>
+                            </div>
 
                             {/* Gradient overlay */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />

@@ -6,19 +6,19 @@ import Link from "next/link"
 const footerLinks = {
   brand: [
     { label: "Store Locations", href: "/stores" },
-    { label: "Craftsmanship", href: "/about/craftsmanship" },
-    { label: "Sustainable Projects", href: "/about/sustainability" },
-    { label: "Careers", href: "/careers" },
+    { label: "Craftsmanship", href: "/coming-soon" },
+    { label: "Sustainable Projects", href: "/coming-soon" },
+    { label: "Careers", href: "/coming-soon" },
   ],
   shipping: [
-    { label: "Shipping & Taxes", href: "/shipping" },
-    { label: "Make a Return", href: "/returns" },
-    { label: "Help & Questions", href: "/help" },
+    { label: "Shipping & Taxes", href: "/coming-soon" },
+    { label: "Make a Return", href: "/coming-soon" },
+    { label: "Help & Questions", href: "/coming-soon" },
   ],
   legal: [
-    { label: "General Terms", href: "/legal/terms" },
-    { label: "Legal Mentions", href: "/legal/mentions" },
-    { label: "Privacy Policy", href: "/legal/privacy" },
+    { label: "General Terms", href: "/coming-soon" },
+    { label: "Legal Mentions", href: "/coming-soon" },
+    { label: "Privacy Policy", href: "/coming-soon" },
   ],
   social: [
     { label: "Facebook", href: "https://facebook.com" },

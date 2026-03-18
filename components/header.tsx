@@ -6,6 +6,7 @@ import { Heart, Menu, X, ChevronDown, LogOut, User, Package } from "lucide-react
 import { AnimatePresence, motion } from "framer-motion"
 import { MegaMenu } from "./mega-menu"
 import { CartSidebar } from "./cart-sidebar"
+import { SearchOverlay } from "./search-overlay"
 import { useCart } from "@/context/cart-context"
 import { useAuth } from "@/context/auth-context"
 import {
@@ -27,6 +28,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const { totalItems, toggleCart } = useCart()
   const { user, isLoading: authLoading, signOut } = useAuth()
 
@@ -47,6 +49,14 @@ export function Header() {
       if (e.key === "Escape") {
         setActiveMegaMenu(null)
         setMobileMenuOpen(false)
+        setSearchOpen(false)
+      }
+      if (
+        e.key === "/" &&
+        !["INPUT", "TEXTAREA"].includes((document.activeElement?.tagName ?? ""))
+      ) {
+        e.preventDefault()
+        setSearchOpen(true)
       }
     }
     window.addEventListener("scroll", handleScroll, { passive: true })
@@ -177,12 +187,13 @@ export function Header() {
                   )
                 )}
 
-                <Link
-                  href="/search"
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(true)}
                   className="text-[11px] tracking-[0.15em] text-foreground hover:text-primary transition-colors duration-300 font-sans font-medium uppercase"
                 >
                   SEARCH
-                </Link>
+                </button>
               </div>
 
               <button type="button" className="relative text-foreground hover:text-primary transition-colors" aria-label="Wishlist">
@@ -231,6 +242,9 @@ export function Header() {
 
       {/* Cart Sidebar */}
       <CartSidebar />
+
+      {/* Search Overlay */}
+      <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -290,13 +304,13 @@ export function Header() {
                 SIGN IN
               </Link>
             )}
-            <Link
-              href="/search"
+            <button
+              type="button"
+              onClick={() => { setMobileMenuOpen(false); setSearchOpen(true) }}
               className="text-left text-lg text-text-tertiary hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
             >
               SEARCH
-            </Link>
+            </button>
           </div>
         </motion.div>
         )}

@@ -39,7 +39,7 @@ export function MagazineSection() {
           >
             <div className="relative aspect-[3/4] overflow-hidden">
               <ImageWithSkeleton
-                src="/images/magazine.jpg"
+                src="/images/editorial-magazine.jpg"
                 alt="Longue Vue Magazine"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-700"
