@@ -51,7 +51,6 @@ export function ProductDetail({ product }: { product: DisplayProduct }) {
       const data = await res.json()
       if (data.action === "added") {
         setIsWishlisted(true)
-        setWishlistItemId(data.id)
       } else {
         setIsWishlisted(false)
         setWishlistItemId(null)
