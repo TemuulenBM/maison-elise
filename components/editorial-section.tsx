@@ -1,68 +1,81 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { ImageWithSkeleton } from "./image-with-skeleton"
+import { motion } from "framer-motion"
 
 export function EditorialSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section ref={sectionRef} className="bg-background">
+    <section className="bg-background">
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {/* Left Image */}
-        <div
-          className={`relative h-[60vh] lg:h-[80vh] overflow-hidden transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
-          }`}
+        <motion.div
+          className="relative h-[60vh] lg:h-[80vh] overflow-hidden group"
+          initial={{ opacity: 0, x: -40, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          <ImageWithSkeleton
-            src="/images/editorial-1.jpg"
-            alt="Fashion editorial"
-            fill
-            className="object-cover hover:scale-[1.03] transition-transform duration-700"
-          />
+          <motion.div
+            className="absolute inset-0"
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <ImageWithSkeleton
+              src="/images/editorial-1.jpg"
+              alt="Fashion editorial"
+              fill
+              className="object-cover"
+            />
+          </motion.div>
           <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
-        </div>
+
+          {/* Hover overlay text */}
+          <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-background/90 via-background/40 to-transparent p-8">
+            <p className="text-[10px] tracking-[0.25em] text-primary uppercase mb-2">Spring 2026</p>
+            <p className="font-serif font-light text-xl text-foreground">Editorial</p>
+          </div>
+        </motion.div>
 
         {/* Right Image */}
-        <div
-          className={`relative h-[60vh] lg:h-[80vh] overflow-hidden transition-all duration-700 delay-150 ${
-            isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
-          }`}
+        <motion.div
+          className="relative h-[60vh] lg:h-[80vh] overflow-hidden group"
+          initial={{ opacity: 0, x: 40, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1], delay: 0.15 }}
         >
-          <ImageWithSkeleton
-            src="/images/editorial-2.jpg"
-            alt="Fashion editorial"
-            fill
-            className="object-cover hover:scale-[1.03] transition-transform duration-700"
-          />
+          <motion.div
+            className="absolute inset-0"
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <ImageWithSkeleton
+              src="/images/editorial-2.jpg"
+              alt="Fashion editorial"
+              fill
+              className="object-cover"
+            />
+          </motion.div>
           <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
-        </div>
+
+          {/* Hover overlay text */}
+          <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-background/90 via-background/40 to-transparent p-8">
+            <p className="text-[10px] tracking-[0.25em] text-primary uppercase mb-2">The Edit</p>
+            <p className="font-serif font-light text-xl text-foreground">Campaign 2026</p>
+          </div>
+        </motion.div>
       </div>
 
       {/* Lookbook CTA */}
-      <div className="flex justify-center py-8">
+      <motion.div
+        className="flex justify-center py-8"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: 0.3 }}
+      >
         <Link
           href="/lookbook"
           className="inline-flex items-center gap-2 font-sans text-[11px] uppercase tracking-[0.3em] text-primary hover:opacity-80 transition-opacity group"
@@ -70,7 +83,7 @@ export function EditorialSection() {
           Explore Lookbook
           <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
         </Link>
-      </div>
+      </motion.div>
     </section>
   )
 }

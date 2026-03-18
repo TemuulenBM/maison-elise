@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
 import { ImageWithSkeleton } from "./image-with-skeleton"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Plus } from "lucide-react"
+import { motion } from "framer-motion"
 
 const images = [
   { src: "/images/instagram-1.jpg", alt: "Craftsmanship" },
@@ -10,39 +10,32 @@ const images = [
   { src: "/images/instagram-3.jpg", alt: "Accessories" },
   { src: "/images/instagram-4.jpg", alt: "Boutique" },
   { src: "/images/editorial-1.jpg", alt: "Editorial" },
-  { src: "/images/product-model.jpg", alt: "Campaign" },
 ]
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+  },
+}
+
+const item = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] } },
+}
+
 export function InstagramSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-background">
+    <section className="py-24 lg:py-32 bg-background">
       <div className="px-6 lg:px-12">
         {/* Header */}
-        <div
-          className={`text-center mb-12 transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-          }`}
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <p className="text-[11px] tracking-[0.2em] text-text-tertiary uppercase mb-4">
             @maison_elise
@@ -50,36 +43,69 @@ export function InstagramSection() {
           <h2 className="font-serif text-3xl lg:text-4xl text-foreground mb-6">
             Follow us on Instagram
           </h2>
-          <button type="button" className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] text-text-tertiary hover:text-primary transition-colors uppercase group">
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] text-text-tertiary hover:text-primary transition-colors uppercase group"
+          >
             Our Account
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
-        </div>
+        </motion.div>
 
-        {/* Image Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {images.map((image, index) => (
-            <div
+        {/* Editorial Asymmetric Grid */}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-2 md:grid-cols-[1.5fr_1fr_1fr] grid-rows-2 gap-3 lg:gap-4"
+          style={{ gridTemplateRows: "repeat(2, 240px)" }}
+        >
+          {/* Image 1 — spans 2 rows on desktop */}
+          <motion.div
+            variants={item}
+            className="relative overflow-hidden group cursor-pointer col-span-1 row-span-1 md:row-span-2"
+          >
+            <ImageWithSkeleton
+              src={images[0].src}
+              alt={images[0].alt}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-background/0 group-hover:bg-background/35 transition-colors duration-500 flex items-center justify-center">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col items-center gap-2">
+                <Plus className="w-5 h-5 text-foreground" strokeWidth={1} />
+                <span className="text-[9px] tracking-[0.25em] text-foreground uppercase">
+                  @maison_elise
+                </span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Images 2–5 — 2×2 grid on right */}
+          {images.slice(1).map((image, index) => (
+            <motion.div
               key={index}
-              className={`relative aspect-square overflow-hidden group cursor-pointer transition-all duration-700 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-              }`}
-              style={{ transitionDelay: `${Math.min(index * 80, 400)}ms` }}
+              variants={item}
+              className="relative overflow-hidden group cursor-pointer col-span-1"
             >
               <ImageWithSkeleton
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="object-cover group-hover:scale-110 transition-transform duration-700"
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-background/0 group-hover:bg-background/40 transition-colors duration-500 flex items-center justify-center">
-                <span className="text-[10px] tracking-[0.2em] text-foreground uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  @maison_elise
-                </span>
+              <div className="absolute inset-0 bg-background/0 group-hover:bg-background/35 transition-colors duration-500 flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col items-center gap-2">
+                  <Plus className="w-4 h-4 text-foreground" strokeWidth={1} />
+                  <span className="text-[9px] tracking-[0.25em] text-foreground uppercase">
+                    @maison_elise
+                  </span>
+                </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

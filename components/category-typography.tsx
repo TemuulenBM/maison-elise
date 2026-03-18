@@ -1,91 +1,139 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
+import { motion, AnimatePresence } from "framer-motion"
+import { useReducedMotion } from "framer-motion"
 
 const categories = [
-  { name: "HANDBAGS", subtitle: "Totes, Crossbody & Clutches", href: "/collection" },
-  { name: "JEWELLERY", subtitle: "Rings, Bracelets & Necklaces", href: "/collection" },
-  { name: "SMALL LEATHER GOODS", subtitle: "Wallets, Cardholders & Pouches", href: "/collection" },
+  {
+    name: "HANDBAGS",
+    subtitle: "Totes, Crossbody & Clutches",
+    href: "/bags",
+    image: "/images/hero-bag.jpg",
+  },
+  {
+    name: "JEWELLERY",
+    subtitle: "Rings, Bracelets & Necklaces",
+    href: "/jewellery",
+    image: "/images/editorial-1.jpg",
+  },
+  {
+    name: "SMALL LEATHER GOODS",
+    subtitle: "Wallets, Cardholders & Pouches",
+    href: "/accessories",
+    image: "/images/product-model.jpg",
+  },
 ]
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+  },
+}
+
+const item = {
+  hidden: { opacity: 0, y: 32 },
+  show: { opacity: 1, y: 0, transition: { duration: 1.1, ease: [0.25, 0.1, 0.25, 1] } },
+}
+
 export function CategoryTypography() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
+  const prefersReducedMotion = useReducedMotion()
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
+  const hoveredCat = categories.find((c) => c.name === hoveredCategory)
 
   return (
-    <section
-      ref={sectionRef}
-      className="py-32 lg:py-40 bg-background overflow-hidden"
-    >
+    <section className="py-32 lg:py-40 bg-background overflow-hidden">
       <div className="max-w-5xl mx-auto px-6 lg:px-12">
         {/* Section Label */}
-        <div
-          className={`text-center mb-16 lg:mb-20 transition-all duration-700 ${
-            isVisible
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-3"
-          }`}
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          className="text-center text-[11px] font-sans font-medium tracking-[0.2em] text-text-tertiary uppercase mb-16 lg:mb-20"
         >
-          <p className="text-[11px] font-sans font-medium tracking-[0.2em] text-text-tertiary uppercase">
-            Explore
-          </p>
-        </div>
+          Explore
+        </motion.p>
 
         {/* Category List */}
-        <div className="flex flex-col items-center">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          className="flex flex-col items-center"
+        >
           {categories.map((category, index) => (
-            <Link
-              key={category.name}
-              href={category.href}
-              className={`group relative block text-center py-8 lg:py-12 transition-all duration-700 hover:-translate-y-1 ${
-                isVisible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
-              }`}
-              style={{
-                transitionDelay: `${index * 100}ms`,
-              }}
-            >
-              {/* Number */}
-              <span className="block text-[11px] font-sans tracking-[0.2em] text-text-tertiary group-hover:text-primary transition-colors duration-500 mb-4">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+            <motion.div key={category.name} variants={item} className="w-full">
+              <Link
+                href={category.href}
+                className="group relative block text-center py-8 lg:py-12"
+                onMouseEnter={() => setHoveredCategory(category.name)}
+                onMouseLeave={() => setHoveredCategory(null)}
+              >
+                {/* Number */}
+                <motion.span
+                  className="block text-[11px] font-sans tracking-[0.2em] text-text-tertiary group-hover:text-primary transition-colors duration-500 mb-4"
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </motion.span>
 
-              {/* Category Name */}
-              <span className="block font-serif font-light text-3xl sm:text-5xl lg:text-6xl xl:text-[72px] text-foreground tracking-[0.12em] leading-none group-hover:text-primary transition-colors duration-500">
-                {category.name}
-              </span>
+                {/* Category Name */}
+                <span className="block font-serif font-light text-3xl sm:text-5xl lg:text-6xl xl:text-[72px] text-foreground tracking-[0.12em] leading-none group-hover:text-primary transition-colors duration-500">
+                  {category.name}
+                </span>
 
-              {/* Subtitle */}
-              <span className="block mt-4 text-[12px] font-sans tracking-[0.1em] text-text-tertiary group-hover:text-primary/70 transition-colors duration-500">
-                {category.subtitle}
-              </span>
+                {/* Subtitle */}
+                <span className="block mt-4 text-[12px] font-sans tracking-[0.1em] text-text-tertiary group-hover:text-primary/70 transition-colors duration-500">
+                  {category.subtitle}
+                </span>
 
-              {/* Divider */}
-              <span className="block w-12 h-[1px] bg-border mx-auto mt-8 group-hover:bg-primary group-hover:w-20 transition-all duration-500" />
-            </Link>
+                {/* Gold separator */}
+                <span className="block w-8 h-px bg-border mx-auto mt-8 group-hover:bg-primary group-hover:w-16 transition-all duration-500" />
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
+
+      {/* Floating image preview — desktop only */}
+      {!prefersReducedMotion && (
+        <AnimatePresence>
+          {hoveredCat && (
+            <motion.div
+              key={hoveredCat.name}
+              className="hidden lg:block fixed right-[8vw] top-1/2 -translate-y-1/2 w-[260px] h-[360px] pointer-events-none z-50"
+              initial={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 0.96, filter: "blur(4px)" }}
+              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+            >
+              <div className="border border-[#2A2A28] p-px h-full">
+                <div className="border border-white/5 h-full relative overflow-hidden">
+                  <Image
+                    src={hoveredCat.image}
+                    alt={hoveredCat.name}
+                    fill
+                    className="object-cover"
+                    sizes="260px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent" />
+                  <div className="absolute bottom-4 left-4">
+                    <p className="text-[10px] tracking-[0.2em] text-primary uppercase">
+                      {hoveredCat.name}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
     </section>
   )
 }

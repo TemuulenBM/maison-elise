@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { Heart, ChevronLeft, ChevronRight, Box, Truck, RotateCcw, Pen } from "lucide-react"
 import { useCart } from "@/context/cart-context"
@@ -70,32 +71,88 @@ export function ProductDetail({ product }: { product: DisplayProduct }) {
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {/* Left - Images */}
         <div className="relative bg-card">
-          <div className="aspect-[3/4] lg:aspect-auto lg:h-screen lg:sticky lg:top-0">
-            <ImageZoom
-              src={selectedColor?.image || product.image}
-              alt={product.name}
-            />
+          <div className="lg:h-[calc(100vh-5rem)] lg:sticky lg:top-20 flex flex-col lg:flex-row">
 
-            {/* Image Navigation */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 pointer-events-auto">
-              <button
-                type="button"
-                onClick={() => setCurrentImageIndex(Math.max(0, currentImageIndex - 1))}
-                className="p-2 bg-background/80 text-foreground hover:bg-primary transition-colors"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <span className="text-[12px] text-foreground">
-                {currentImageIndex + 1} / {product.colors.length}
-              </span>
-              <button
-                type="button"
-                onClick={() => setCurrentImageIndex(Math.min(product.colors.length - 1, currentImageIndex + 1))}
-                className="p-2 bg-background/80 text-foreground hover:bg-primary transition-colors"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
+            {/* Thumbnail strip — vertical desktop */}
+            {product.colors.length > 1 && (
+              <div className="hidden lg:flex flex-col gap-2 p-3 w-20 overflow-y-auto border-r border-border shrink-0">
+                {product.colors.map((color, idx) => (
+                  <button
+                    key={color.name}
+                    type="button"
+                    title={color.name}
+                    onClick={() => { setSelectedColor(color); setCurrentImageIndex(idx) }}
+                    className={`relative aspect-square border transition-all duration-300 overflow-hidden ${
+                      currentImageIndex === idx
+                        ? "border-2 border-primary"
+                        : "border border-border hover:border-text-tertiary"
+                    }`}
+                  >
+                    <Image src={color.image} alt={color.name} fill className="object-cover" sizes="80px" />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Main image */}
+            <div className="flex-1 aspect-[3/4] lg:aspect-auto relative">
+              <ImageZoom
+                src={selectedColor?.image || product.image}
+                alt={product.name}
+              />
+
+              {/* Arrow navigation — mobile + desktop overlay */}
+              {product.colors.length > 1 && (
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 pointer-events-auto">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newIdx = Math.max(0, currentImageIndex - 1)
+                      setCurrentImageIndex(newIdx)
+                      setSelectedColor(product.colors[newIdx])
+                    }}
+                    className="p-2 bg-background/80 text-foreground hover:bg-primary transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <span className="text-[12px] text-foreground">
+                    {currentImageIndex + 1} / {product.colors.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newIdx = Math.min(product.colors.length - 1, currentImageIndex + 1)
+                      setCurrentImageIndex(newIdx)
+                      setSelectedColor(product.colors[newIdx])
+                    }}
+                    className="p-2 bg-background/80 text-foreground hover:bg-primary transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
             </div>
+
+            {/* Thumbnail strip — horizontal mobile */}
+            {product.colors.length > 1 && (
+              <div className="flex lg:hidden gap-2 p-3 overflow-x-auto border-t border-border">
+                {product.colors.map((color, idx) => (
+                  <button
+                    key={color.name}
+                    type="button"
+                    title={color.name}
+                    onClick={() => { setSelectedColor(color); setCurrentImageIndex(idx) }}
+                    className={`relative flex-none w-16 aspect-square border transition-all duration-300 overflow-hidden ${
+                      currentImageIndex === idx
+                        ? "border-2 border-primary"
+                        : "border border-border hover:border-text-tertiary"
+                    }`}
+                  >
+                    <Image src={color.image} alt={color.name} fill className="object-cover" sizes="64px" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -136,10 +193,10 @@ export function ProductDetail({ product }: { product: DisplayProduct }) {
                     setSelectedColor(color)
                     setCurrentImageIndex(product.colors.indexOf(color))
                   }}
-                  className={`w-12 h-12 rounded-full transition-all duration-300 hover:scale-110 ${
+                  className={`w-10 h-10 transition-all duration-300 hover:scale-105 ${
                     selectedColor.name === color.name
-                      ? "border-2 border-primary scale-110"
-                      : "border border-border hover:border-text-tertiary"
+                      ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-105"
+                      : "ring-1 ring-border hover:ring-text-tertiary"
                   }`}
                   style={{ backgroundColor: color.hex }}
                   title={color.name}
@@ -150,12 +207,6 @@ export function ProductDetail({ product }: { product: DisplayProduct }) {
               </button>
             </div>
           </div>
-
-          {/* 3D View Button */}
-          <button type="button" className="w-full py-3 mb-4 border border-border text-foreground text-[11px] tracking-[0.15em] uppercase hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
-            <Box className="w-4 h-4" />
-            3D View
-          </button>
 
           {/* Personalization */}
           <div className="mb-4 border border-border">

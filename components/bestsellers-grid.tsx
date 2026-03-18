@@ -1,44 +1,47 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { Heart, ShoppingBag, Grid3X3, LayoutGrid } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import type { DisplayProduct } from "@/lib/adapters"
+import { motion } from "framer-motion"
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.07, delayChildren: 0.05 },
+  },
+}
+
+const item = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] } },
+}
 
 export function BestsellersGrid({ products }: { products: DisplayProduct[] }) {
-  const [isVisible, setIsVisible] = useState(false)
   const [, setHoveredProduct] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<"grid" | "compact">("grid")
-  const sectionRef = useRef<HTMLElement>(null)
   const { addToCart } = useCart()
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-background">
+    <section className="py-24 lg:py-32 bg-background">
       <div className="px-6 lg:px-12">
         {/* Header */}
-        <div className="flex items-center justify-between mb-12">
-          <h2 className="font-serif text-3xl lg:text-4xl text-foreground">Most Coveted</h2>
+        <motion.div
+          className="flex items-end justify-between mb-12"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+        >
+          <div>
+            <h2 className="font-serif text-3xl lg:text-4xl text-foreground">Most Coveted</h2>
+            <div className="w-12 h-px bg-[#C9A96E] mt-4" />
+          </div>
           <div className="flex items-center gap-6">
             <Link
               href="/collection"
@@ -61,81 +64,83 @@ export function BestsellersGrid({ products }: { products: DisplayProduct[] }) {
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Product Grid */}
-        <div
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
           className={`grid gap-6 ${
             viewMode === "grid"
               ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
               : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
           }`}
         >
-          {products.map((product, index) => (
-            <div
+          {products.map((product) => (
+            <motion.div
               key={product.id}
-              className={`group transition-all duration-600 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-              style={{ transitionDelay: `${Math.min(index * 70, 400)}ms` }}
+              variants={item}
+              className="group"
               onMouseEnter={() => setHoveredProduct(product.id)}
               onMouseLeave={() => setHoveredProduct(null)}
             >
               {/* Product Image */}
               <div className="border border-[#2A2A28] p-px mb-4">
                 <div className="border border-white/5">
-              <Link
-                href={`/product/${product.id}`}
-                className={`relative block bg-card overflow-hidden ${
-                  viewMode === "grid" ? "aspect-square" : "aspect-[3/4]"
-                }`}
-              >
-                {/* Primary Image */}
-                <ImageWithSkeleton
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover transition-all duration-700 group-hover:scale-[1.03]"
-                />
-
-                {/* Hover Image — second color */}
-                {product.colors[1] && (
-                  <Image
-                    src={product.colors[1].image}
-                    alt={`${product.name} - ${product.colors[1].name}`}
-                    fill
-                    className="object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-[1.03]"
-                  />
-                )}
-
-                {/* Bottom Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                {/* Quick Actions */}
-                <div className="absolute bottom-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      addToCart(product.defaultVariantId)
-                    }}
-                    className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
+                  <Link
+                    href={`/product/${product.id}`}
+                    className={`relative block bg-card overflow-hidden ${
+                      viewMode === "grid" ? "aspect-square" : "aspect-[3/4]"
+                    }`}
                   >
-                    <ShoppingBag className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                    }}
-                    className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
-                  >
-                    <Heart className="w-4 h-4" />
-                  </button>
-                </div>
-              </Link>
+                    {/* Primary Image */}
+                    <ImageWithSkeleton
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-all duration-700 group-hover:scale-[1.03]"
+                    />
+
+                    {/* Hover Image — second color */}
+                    {product.colors[1] && (
+                      <Image
+                        src={product.colors[1].image}
+                        alt={`${product.name} - ${product.colors[1].name}`}
+                        fill
+                        className="object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-[1.03]"
+                      />
+                    )}
+
+                    {/* Bottom Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    {/* Quick Actions */}
+                    <div className="absolute bottom-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          addToCart(product.defaultVariantId)
+                        }}
+                        className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
+                      >
+                        <ShoppingBag className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                        }}
+                        className="p-2.5 bg-background/90 backdrop-blur-sm text-foreground hover:bg-primary hover:text-background transition-colors"
+                      >
+                        <Heart className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </Link>
                 </div>
               </div>
 
@@ -149,9 +154,9 @@ export function BestsellersGrid({ products }: { products: DisplayProduct[] }) {
                 </p>
                 <p className="text-[12px] text-foreground">${product.price}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )
