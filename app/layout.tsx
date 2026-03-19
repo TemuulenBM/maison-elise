@@ -6,7 +6,7 @@ import './globals.css'
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['300', '400', '600'],
   variable: '--font-serif',
   display: 'swap',
 })
@@ -54,6 +54,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${montserrat.variable}`}>
       <body className="font-sans antialiased bg-background text-foreground">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Maison Élise",
+              url: "https://maisonelise.com",
+              logo: "https://maisonelise.com/logo.png",
+              sameAs: [],
+            }),
+          }}
+        />
         <Providers>
           {children}
         </Providers>

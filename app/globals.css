@@ -123,11 +123,6 @@
     letter-spacing: 0.02em;
   }
   
-  /* Image treatments */
-  img {
-    filter: brightness(0.95) contrast(1.02);
-  }
-  
   /* Vertical writing mode for logo */
   .writing-vertical {
     writing-mode: vertical-rl;

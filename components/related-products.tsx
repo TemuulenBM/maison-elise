@@ -80,6 +80,7 @@ export function RelatedProducts({ products }: { products: DisplayProduct[] }) {
                     alt={`${product.name} - ${product.colors[1].name}`}
                     fill
                     className="object-cover transition-all duration-700 opacity-0 group-hover:opacity-100 group-hover:scale-[1.03]"
+                    sizes="(max-width: 640px) 50vw, 25vw"
                   />
                 )}
 

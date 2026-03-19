@@ -43,7 +43,14 @@ export function ImageZoom({ src, alt }: ImageZoomProps) {
             : { scale: 1, opacity: 1, filter: "blur(0px)" }}
           transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          <Image src={src} alt={alt} fill className="object-cover" />
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover"
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 800px"
+          />
         </motion.div>
 
         {/* Zoom hint */}

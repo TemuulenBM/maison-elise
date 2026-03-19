@@ -9,7 +9,19 @@ import { LOOKBOOK_BY_SLUG_QUERY } from "@/lib/sanity-queries";
 import { prisma } from "@/lib/prisma";
 import type { LookbookDoc, EditorialPageData, EditorialHotspotData } from "@/types";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) return [];
+  try {
+    const slugs = await sanityClient.fetch<{ slug: string }[]>(
+      `*[_type == "lookbook"]{ "slug": slug.current }`
+    );
+    return slugs.map(({ slug }) => ({ slug }));
+  } catch {
+    return [];
+  }
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
