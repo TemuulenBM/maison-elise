@@ -8,24 +8,31 @@ export const metadata: Metadata = {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ backgroundColor: "#FAFAF9" }}>
       {/* Admin Header */}
-      <header className="border-b border-border bg-surface-2 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link href="/admin" className="font-serif text-lg text-foreground font-light tracking-[0.04em]">
-              Maison Élise <span className="text-primary">Admin</span>
+      <header style={{ backgroundColor: "#FFFFFF", borderBottom: "1px solid #E8E4DF" }}>
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-10">
+            <Link href="/admin" className="font-serif text-lg font-normal tracking-[0.04em]" style={{ color: "#111111" }}>
+              Maison Élise{" "}
+              <span style={{ color: "#C9A96E" }}>Admin</span>
             </Link>
             <nav className="flex items-center gap-6">
               <Link
                 href="/admin/orders"
-                className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors"
+                className="text-[11px] uppercase tracking-[0.15em] transition-colors duration-200"
+                style={{ color: "#6B6560" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#C9A96E")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#6B6560")}
               >
                 Orders
               </Link>
               <Link
                 href="/admin/products"
-                className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors"
+                className="text-[11px] uppercase tracking-[0.15em] transition-colors duration-200"
+                style={{ color: "#6B6560" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#C9A96E")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#6B6560")}
               >
                 Products
               </Link>
@@ -33,14 +40,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
           <Link
             href="/"
-            className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground transition-colors"
+            className="text-[10px] uppercase tracking-[0.12em] transition-colors duration-200"
+            style={{ color: "#9B9490" }}
           >
             ← Storefront
           </Link>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-12">
+      <main className="max-w-5xl mx-auto px-6 py-10 md:px-6 md:py-12">
         {children}
       </main>
     </div>
