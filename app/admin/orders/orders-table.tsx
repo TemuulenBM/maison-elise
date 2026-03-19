@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import type { Order, OrderItem, Profile } from "@/lib/generated/prisma"
+import { formatPrice } from "@/types"
 
 type OrderWithRelations = Order & {
   user: Pick<Profile, "fullName">
@@ -24,19 +25,23 @@ export function AdminOrdersTable({ orders }: { orders: OrderWithRelations[] }) {
   const [items, setItems] = useState(orders)
   const [loading, setLoading] = useState<string | null>(null)
   const [filter, setFilter] = useState<OrderStatus | "ALL">("ALL")
+  const [error, setError] = useState<string | null>(null)
 
   async function handleStatusChange(orderId: string, status: OrderStatus) {
     setLoading(orderId)
+    setError(null)
     try {
       const res = await fetch(`/api/admin/orders/${orderId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
       })
-      if (!res.ok) throw new Error()
+      if (!res.ok) throw new Error("Failed to update order status")
       setItems((prev) =>
         prev.map((o) => (o.id === orderId ? { ...o, status } : o))
       )
+    } catch {
+      setError("Failed to update order status. Please try again.")
     } finally {
       setLoading(null)
     }
@@ -62,6 +67,10 @@ export function AdminOrdersTable({ orders }: { orders: OrderWithRelations[] }) {
           </button>
         ))}
       </div>
+
+      {error && (
+        <p className="text-[12px] text-red-400 mb-4">{error}</p>
+      )}
 
       <div className="border border-border">
         {/* Header */}
@@ -94,7 +103,7 @@ export function AdminOrdersTable({ orders }: { orders: OrderWithRelations[] }) {
                     {totalItems}
                   </div>
                   <div className="text-[12px] text-foreground">
-                    ${(order.totalAmount / 100).toLocaleString()}
+                    {formatPrice(order.totalAmount)}
                   </div>
                   <div className="text-[11px] text-muted-foreground">
                     {new Date(order.createdAt).toLocaleDateString("en-US", {
@@ -106,6 +115,7 @@ export function AdminOrdersTable({ orders }: { orders: OrderWithRelations[] }) {
                     <select
                       value={order.status}
                       disabled={loading === order.id}
+                      // Select returns a string; cast is safe since options are restricted to ORDER_STATUSES
                       onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
                       className={`w-full bg-surface-2 border px-2 py-1.5 text-[10px] uppercase tracking-[0.1em] focus:outline-none focus:border-primary transition-colors disabled:opacity-50 ${STATUS_COLORS[order.status as OrderStatus] ?? "border-border text-foreground"}`}
                     >

@@ -1,20 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { createServerClient } from "@/lib/supabase/server"
 import { uploadProductImage } from "@/lib/supabase-storage"
-
-function getAdminEmails(): string[] {
-  return (process.env.ADMIN_EMAILS ?? "").split(",").map((e) => e.trim()).filter(Boolean)
-}
-
-async function requireAdmin() {
-  const supabase = await createServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
-  const adminEmails = getAdminEmails()
-  if (adminEmails.length > 0 && !adminEmails.includes(user.email ?? "")) return null
-  return user
-}
+import { requireAdmin } from "@/lib/admin"
 
 export async function POST(
   request: NextRequest,
@@ -33,6 +20,7 @@ export async function POST(
   }
 
   const formData = await request.formData()
+  // FormData.get() returns FormDataEntryValue | null; narrow to File/string since we control the upload form
   const file = formData.get("file") as File | null
   const variantId = formData.get("variantId") as string | null
 

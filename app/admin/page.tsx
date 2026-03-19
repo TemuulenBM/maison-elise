@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { prisma } from "@/lib/prisma"
+import { formatPrice } from "@/types"
 
 export default async function AdminDashboard() {
   const [orderCount, productCount, pendingCount] = await Promise.all([
@@ -84,7 +85,7 @@ export default async function AdminDashboard() {
                   {order.status}
                 </span>
                 <p className="text-[11px] text-foreground mt-1">
-                  ${(order.totalAmount / 100).toLocaleString()}
+                  {formatPrice(order.totalAmount)}
                 </p>
               </div>
             </Link>

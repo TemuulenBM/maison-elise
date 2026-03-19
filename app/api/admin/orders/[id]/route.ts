@@ -1,24 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { createServerClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/admin";
 
 const patchSchema = z.object({
   status: z.enum(["PENDING", "CONFIRMED", "PROCESSING", "SHIPPED", "DELIVERED", "REFUNDED"]),
 });
-
-function getAdminEmails(): string[] {
-  return (process.env.ADMIN_EMAILS ?? "").split(",").map((e) => e.trim()).filter(Boolean);
-}
-
-async function requireAdmin() {
-  const supabase = await createServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
-  const adminEmails = getAdminEmails();
-  if (adminEmails.length > 0 && !adminEmails.includes(user.email ?? "")) return null;
-  return user;
-}
 
 export async function PATCH(
   request: NextRequest,
