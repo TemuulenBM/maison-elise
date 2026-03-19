@@ -9,8 +9,9 @@ node_modules/
 .env
 .env*.local
 
-# Claude local settings (machine-specific overrides)
-.claude/settings.local.json
+# Claude
+CLAUDE.md
+.claude/
 .DS_Store
 /lib/generated/prisma
 .vercel
