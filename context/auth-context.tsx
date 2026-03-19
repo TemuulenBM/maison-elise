@@ -1,6 +1,7 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react"
+import { createContext, useContext, useEffect, useState, useCallback, useMemo, useRef } from "react"
+import { useRouter } from "next/navigation"
 import { createBrowserClient } from "@/lib/supabase/client"
 import type { User, AuthChangeEvent, Session } from "@supabase/supabase-js"
 
@@ -14,27 +15,19 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
+  const isSigningOutRef = useRef(false)
 
   useEffect(() => {
     const supabase = createBrowserClient()
 
-    async function initAuth() {
-      const { data } = await supabase.auth.getUser()
-      const currentUser = data.user ?? null
-      setUser(currentUser)
-      if (currentUser) {
-        const res = await fetch("/api/auth/me")
-        const json = await res.json()
-        setIsAdmin(json.isAdmin === true)
-      }
-      setIsLoading(false)
-    }
-    initAuth()
+    // onAuthStateChange fires INITIAL_SESSION on first register — no need for separate initAuth
+    const { data: listener } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
+      if (isSigningOutRef.current) return
 
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event: AuthChangeEvent, session: Session | null) => {
       const newUser = session?.user ?? null
       setUser(newUser)
       if (newUser) {
@@ -45,7 +38,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAdmin(false)
       }
 
-      if (_event === "SIGNED_IN" || _event === "SIGNED_OUT") {
+      setIsLoading(false)
+
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
         window.dispatchEvent(new CustomEvent("auth-state-changed"))
       }
     })
@@ -54,11 +49,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signOut = useCallback(async () => {
+    isSigningOutRef.current = true
     const supabase = createBrowserClient()
     await supabase.auth.signOut()
     setUser(null)
-    window.location.href = "/"
-  }, [])
+    setIsAdmin(false)
+    router.push("/")
+    router.refresh()
+    isSigningOutRef.current = false
+  }, [router])
 
   const value = useMemo(
     () => ({ user, isLoading, isAdmin, signOut }),

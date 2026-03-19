@@ -29,14 +29,17 @@ const VIP_TIER_LABELS: Record<string, { label: string; color: string }> = {
 }
 
 export default async function AccountPage() {
+  // Middleware already verifies session with getUser() — use getSession() here to avoid duplicate network call
   const supabase = await createServerClient()
   const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    data: { session },
+  } = await supabase.auth.getSession()
 
-  if (!user) {
+  if (!session?.user) {
     redirect("/auth/login?redirect=/account")
   }
+
+  const user = session.user
 
   const [profile, wishlistItems] = await Promise.all([
     prisma.profile.findUnique({

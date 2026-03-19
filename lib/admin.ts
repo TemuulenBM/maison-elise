@@ -10,7 +10,9 @@ function getAdminEmails(): string[] {
  */
 export async function requireAdmin() {
   const supabase = await createServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  // getSession() reads JWT locally (no network call) — sufficient for email-based admin check
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
   if (!user) return null;
   const adminEmails = getAdminEmails();
   if (!adminEmails.includes(user.email ?? "")) return null;

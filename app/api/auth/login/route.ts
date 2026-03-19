@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase/server";
 import { loginRateLimit } from "@/lib/redis";
 
 export async function POST(request: NextRequest) {
@@ -15,25 +14,5 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const body = await request.json();
-  const { email, password } = body as { email: string; password: string };
-
-  if (!email || !password) {
-    return NextResponse.json(
-      { error: "Email and password are required." },
-      { status: 400 }
-    );
-  }
-
-  const supabase = await createServerClient();
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
-  }
-
-  return NextResponse.json({ user: data.user });
+  return NextResponse.json({ ok: true });
 }

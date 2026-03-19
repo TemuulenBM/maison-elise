@@ -156,6 +156,8 @@ model Cart {
   user  Profile?   @relation(fields: [userId], references: [id])
   items CartItem[]
 
+  @@index([userId, expiresAt])
+  @@index([sessionId, expiresAt])
   @@map("carts")
 }
 

@@ -6,16 +6,19 @@ import { getOrCreateSessionId } from "@/lib/cart"
 // Guest cart → authenticated user cart нэгтгэх
 // Auth-secured: userId-г server-side auth-аас авна
 export async function POST() {
-  const supabase = await createServerClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // Run auth check and session ID retrieval in parallel
+  // getSession() reads JWT from cookies locally (no network call)
+  const [session, sessionId] = await Promise.all([
+    createServerClient()
+      .then((s) => s.auth.getSession())
+      .then(({ data }) => data.session),
+    getOrCreateSessionId(),
+  ])
 
+  const user = session?.user
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
-
-  const sessionId = await getOrCreateSessionId()
 
   const guestCart = await prisma.cart.findFirst({
     where: { sessionId, expiresAt: { gt: new Date() } },

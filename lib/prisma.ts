@@ -9,7 +9,7 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    max: 2, // Limit connection pool at build time (11 workers × 2 = 22 max)
+    max: 10,
   });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
