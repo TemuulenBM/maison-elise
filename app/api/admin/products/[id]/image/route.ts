@@ -28,6 +28,11 @@ export async function POST(
     return NextResponse.json({ error: "No file provided" }, { status: 400 })
   }
 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+  if (file.size > MAX_FILE_SIZE) {
+    return NextResponse.json({ error: "File size must not exceed 10MB" }, { status: 400 })
+  }
+
   const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"]
   if (!ALLOWED_TYPES.includes(file.type)) {
     return NextResponse.json(
@@ -64,8 +69,8 @@ export async function POST(
         variantId: variantId ?? null,
         url,
         altText: product.name,
-        isPrimary: variantId == null,
-        sortOrder: variantId == null ? 0 : 1,
+        isPrimary: variantId === null,
+        sortOrder: variantId === null ? 0 : 1,
       },
     })
   }

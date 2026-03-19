@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
-import { Heart, Menu, X, ChevronDown, LogOut, User, Package } from "lucide-react"
+import { Heart, Menu, X, ChevronDown, LogOut, User, Package, LayoutDashboard } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
 import { MegaMenu } from "./mega-menu"
 import { CartSidebar } from "./cart-sidebar"
@@ -30,7 +30,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const { totalItems, toggleCart } = useCart()
-  const { user, isLoading: authLoading, signOut } = useAuth()
+  const { user, isLoading: authLoading, isAdmin, signOut } = useAuth()
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent, itemName: string) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -160,6 +160,17 @@ export function Header() {
                             Orders
                           </Link>
                         </DropdownMenuItem>
+                        {isAdmin && (
+                          <>
+                            <DropdownMenuSeparator className="bg-border" />
+                            <DropdownMenuItem asChild className="cursor-pointer text-[11px] tracking-[0.05em] text-primary focus:text-primary focus:bg-transparent">
+                              <Link href="/admin" className="flex items-center gap-3 px-3 py-2.5">
+                                <LayoutDashboard className="w-3.5 h-3.5" />
+                                Admin Panel
+                              </Link>
+                            </DropdownMenuItem>
+                          </>
+                        )}
                         <DropdownMenuSeparator className="bg-border" />
                         <DropdownMenuItem
                           className="cursor-pointer text-[11px] tracking-[0.05em] text-muted-foreground focus:text-red-400 focus:bg-transparent"
@@ -279,6 +290,15 @@ export function Header() {
                 >
                   MY ACCOUNT
                 </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="text-left text-lg text-primary hover:text-primary/80 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    ADMIN PANEL
+                  </Link>
+                )}
                 <button
                   type="button"
                   className="text-left text-lg text-text-tertiary hover:text-red-400 transition-colors"

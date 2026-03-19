@@ -61,6 +61,7 @@ Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (A
 - `/api/orders/[id]` — `GET` single order with items + variants (auth required, owner-only)
 - `/api/addresses` — `GET` list addresses, `POST` create address (auth required)
 - `/api/addresses/[id]` — `PATCH` update, `DELETE` remove address (auth required, owner-only)
+- `/api/auth/me` — `GET` returns `{ isAdmin: boolean }` for the current session user (used by client-side auth context)
 - `/api/waitlist` — `POST` join waitlist (email + productId)
 - `/api/waitlist/[productId]` — `GET` check registration status (`?email=` required)
 - `/api/wishlist` — `GET` list wishlist, `POST` toggle (add/remove by variantId)

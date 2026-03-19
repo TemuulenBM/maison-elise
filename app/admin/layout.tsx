@@ -20,19 +20,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <nav className="flex items-center gap-6">
               <Link
                 href="/admin/orders"
-                className="text-[11px] uppercase tracking-[0.15em] transition-colors duration-200"
-                style={{ color: "#6B6560" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#C9A96E")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#6B6560")}
+                className="text-[11px] uppercase tracking-[0.15em] transition-colors duration-200 text-[#6B6560] hover:text-[var(--primary)]"
               >
                 Orders
               </Link>
               <Link
                 href="/admin/products"
-                className="text-[11px] uppercase tracking-[0.15em] transition-colors duration-200"
-                style={{ color: "#6B6560" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#C9A96E")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#6B6560")}
+                className="text-[11px] uppercase tracking-[0.15em] transition-colors duration-200 text-[#6B6560] hover:text-[var(--primary)]"
               >
                 Products
               </Link>
