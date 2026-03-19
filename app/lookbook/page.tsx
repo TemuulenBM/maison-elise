@@ -11,6 +11,10 @@ export const revalidate = 3600;
 export const metadata = {
   title: "Lookbook | Maison Élise",
   description: "Explore the editorial world of Maison Élise — seasonal lookbooks with shoppable stories.",
+  openGraph: {
+    title: "Lookbook | MAISON ÉLISE",
+    description: "Explore the editorial world of Maison Élise — seasonal lookbooks with shoppable stories.",
+  },
 };
 
 export default async function LookbookPage() {

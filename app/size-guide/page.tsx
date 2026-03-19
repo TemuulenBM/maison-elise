@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   title: "Size Guide | Maison Élise",
   description:
     "Find your perfect fit with our comprehensive size guide for handbags, straps, and accessories.",
+  openGraph: {
+    title: "Size Guide | MAISON ÉLISE",
+    description:
+      "Find your perfect fit with our comprehensive size guide for handbags, straps, and accessories.",
+  },
 }
 
 const BAG_DIMENSIONS = [

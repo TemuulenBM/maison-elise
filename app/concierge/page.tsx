@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: "Concierge | Maison Élise",
   description:
     "Our dedicated concierge team is available to assist with personalized styling, bespoke requests, and exclusive services.",
+  openGraph: {
+    title: "Concierge | MAISON ÉLISE",
+    description:
+      "Our dedicated concierge team is available to assist with personalized styling, bespoke requests, and exclusive services.",
+  },
 }
 
 export default function ConciergePage() {

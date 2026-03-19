@@ -43,52 +43,55 @@ export async function POST(request: NextRequest) {
 
   // Atomic upsert using interactive transaction to prevent race conditions
   try {
-    await prisma.$transaction(async (tx) => {
-      // Lock variant row to prevent concurrent stock modifications
-      const [lockedVariant] = await tx.$queryRawUnsafe<
-        Array<{ stock_quantity: number; reserved: number }>
-      >(
-        `SELECT stock_quantity, reserved FROM product_variants WHERE id = $1::uuid FOR UPDATE`,
-        variantId
-      );
+    await prisma.$transaction(
+      async (tx) => {
+        // Lock variant row to prevent concurrent stock modifications
+        const [lockedVariant] = await tx.$queryRawUnsafe<
+          Array<{ stock_quantity: number; reserved: number }>
+        >(
+          `SELECT stock_quantity, reserved FROM product_variants WHERE id = $1 FOR UPDATE`,
+          variantId
+        );
 
-      if (!lockedVariant) {
-        throw new Error("Variant not found");
-      }
+        if (!lockedVariant) {
+          throw new Error("Variant not found");
+        }
 
-      const currentAvailable =
-        lockedVariant.stock_quantity - lockedVariant.reserved;
+        const currentAvailable =
+          lockedVariant.stock_quantity - lockedVariant.reserved;
 
-      const existing = await tx.cartItem.findUnique({
-        where: { cartId_variantId: { cartId: cart.id, variantId } },
-      });
-
-      const newQty = (existing?.quantity ?? 0) + quantity;
-      if (newQty > currentAvailable) {
-        throw new Error(`STOCK_INSUFFICIENT|||${currentAvailable}`);
-      }
-
-      if (existing) {
-        await tx.cartItem.update({
-          where: { id: existing.id },
-          data: { quantity: newQty },
+        const existing = await tx.cartItem.findUnique({
+          where: { cartId_variantId: { cartId: cart.id, variantId } },
         });
-      } else {
-        await tx.cartItem.create({
-          data: {
-            cartId: cart.id,
-            variantId,
-            quantity,
-            priceAtAdd: price,
-          },
-        });
-      }
 
-      await tx.productVariant.update({
-        where: { id: variantId },
-        data: { reserved: { increment: quantity } },
-      });
-    });
+        const newQty = (existing?.quantity ?? 0) + quantity;
+        if (newQty > currentAvailable) {
+          throw new Error(`STOCK_INSUFFICIENT|||${currentAvailable}`);
+        }
+
+        if (existing) {
+          await tx.cartItem.update({
+            where: { id: existing.id },
+            data: { quantity: newQty },
+          });
+        } else {
+          await tx.cartItem.create({
+            data: {
+              cartId: cart.id,
+              variantId,
+              quantity,
+              priceAtAdd: price,
+            },
+          });
+        }
+
+        await tx.productVariant.update({
+          where: { id: variantId },
+          data: { reserved: { increment: quantity } },
+        });
+      },
+      { timeout: 10000 }
+    );
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to add to cart";
     if (message.startsWith("STOCK_INSUFFICIENT")) {
@@ -96,6 +99,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Insufficient stock for requested quantity", available },
         { status: 409 }
+      );
+    }
+    if (message.includes("Unable to start a transaction")) {
+      return NextResponse.json(
+        { error: "Server busy, please try again" },
+        { status: 503 }
       );
     }
     return NextResponse.json({ error: message }, { status: 500 });

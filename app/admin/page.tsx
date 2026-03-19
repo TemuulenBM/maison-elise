@@ -1,6 +1,12 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { prisma } from "@/lib/prisma"
 import { formatPrice } from "@/types"
+
+export const metadata: Metadata = {
+  title: "Admin | Maison Élise",
+  robots: { index: false, follow: false },
+}
 
 const STATUS_BADGE: Record<string, string> = {
   PENDING:    "bg-[#F5F0E8] text-[#8B7355] border border-[#E8D9B8]",

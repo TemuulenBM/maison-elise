@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: "Accessories | Maison Élise",
   description:
     "Complete your look with our luxury accessories. Wallets, card holders, keyrings, belts, and small leather goods crafted to perfection.",
+  openGraph: {
+    title: "Accessories | MAISON ÉLISE",
+    description:
+      "Complete your look with our luxury accessories. Wallets, card holders, keyrings, belts, and small leather goods crafted to perfection.",
+  },
 }
 
 export const revalidate = 60

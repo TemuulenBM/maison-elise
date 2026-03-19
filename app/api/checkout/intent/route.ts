@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
       const lockedVariants = await tx.$queryRawUnsafe<VariantRow[]>(
         `SELECT id, stock_quantity, reserved
          FROM product_variants
-         WHERE id = ANY($1::uuid[])
+         WHERE id = ANY($1::text[])
          FOR UPDATE`,
         variantIds
       );
@@ -134,12 +134,18 @@ export async function POST(request: NextRequest) {
       });
 
       return { order: newOrder, totalAmount: amount };
-    });
+    }, { timeout: 15000 });
 
     order = result.order;
     totalAmount = result.totalAmount;
   } catch (err) {
     const message = err instanceof Error ? err.message : "Checkout failed";
+    if (message.includes("Unable to start a transaction")) {
+      return NextResponse.json(
+        { error: "Server busy, please try again" },
+        { status: 503 }
+      );
+    }
     // Parse stock insufficient error
     if (message.includes("|||")) {
       const [errorMsg, variantId, available] = message.split("|||");

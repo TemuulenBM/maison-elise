@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   title: "Collection | Maison Élise",
   description:
     "Browse our complete collection of luxury leather handbags. Timeless craftsmanship meets contemporary design.",
+  openGraph: {
+    title: "Collection | MAISON ÉLISE",
+    description:
+      "Browse our complete collection of luxury leather handbags. Timeless craftsmanship meets contemporary design.",
+  },
 }
 
 export default async function CollectionPage({

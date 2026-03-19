@@ -1,5 +1,11 @@
+import type { Metadata } from "next"
 import { prisma } from "@/lib/prisma"
 import { AdminProductsTable } from "./products-table"
+
+export const metadata: Metadata = {
+  title: "Products | Admin",
+  robots: { index: false, follow: false },
+}
 
 export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({

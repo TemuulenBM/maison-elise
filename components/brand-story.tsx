@@ -1,8 +1,10 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { motion } from "framer-motion"
 import { ImageWithSkeleton } from "./image-with-skeleton"
 import { SITE_IMAGES } from "@/lib/site-images"
+
+const EASE_LUXURY = [0.25, 0.1, 0.25, 1] as const
 
 const stats = [
   { value: "50+", label: "Years of Excellence" },
@@ -11,36 +13,16 @@ const stats = [
 ]
 
 export function BrandStory() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section ref={sectionRef} className="py-32 lg:py-40 bg-surface-2">
+    <section className="py-32 lg:py-40 bg-surface-2">
       <div className="px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left — Text Content */}
-          <div
-            className={`transition-all duration-700 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7, ease: EASE_LUXURY }}
           >
             <p className="text-[11px] font-sans font-medium tracking-[0.2em] text-text-tertiary uppercase mb-6">
               Our Heritage
@@ -77,19 +59,21 @@ export function BrandStory() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Right — Image with Quote */}
-          <div
-            className={`transition-all duration-700 delay-150 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7, ease: EASE_LUXURY, delay: 0.15 }}
           >
             <div className="relative aspect-[3/4] overflow-hidden">
               <ImageWithSkeleton
                 src={SITE_IMAGES.lifestyleModel}
                 alt="Maison Élise craftsmanship"
                 fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover hover:scale-[1.03] transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/10 to-transparent" />
@@ -104,7 +88,7 @@ export function BrandStory() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

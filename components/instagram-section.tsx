@@ -72,6 +72,7 @@ export function InstagramSection() {
               src={images[0].src}
               alt={images[0].alt}
               fill
+              sizes="(max-width: 768px) 50vw, 40vw"
               className="object-cover group-hover:scale-105 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-background/0 group-hover:bg-background/35 transition-colors duration-500 flex items-center justify-center">
@@ -95,6 +96,7 @@ export function InstagramSection() {
                 src={image.src}
                 alt={image.alt}
                 fill
+                sizes="(max-width: 768px) 50vw, 30vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-background/0 group-hover:bg-background/35 transition-colors duration-500 flex items-center justify-center">

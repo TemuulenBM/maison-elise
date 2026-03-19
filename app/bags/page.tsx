@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: "Bags | Maison Élise",
   description:
     "Discover our collection of luxury leather bags. From mini bags to totes, each piece is crafted with exceptional attention to detail.",
+  openGraph: {
+    title: "Bags | MAISON ÉLISE",
+    description:
+      "Discover our collection of luxury leather bags. From mini bags to totes, each piece is crafted with exceptional attention to detail.",
+  },
 }
 
 export const revalidate = 60

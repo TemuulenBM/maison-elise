@@ -27,6 +27,7 @@ export function EditorialSection() {
               src={SITE_IMAGES.editorial1}
               alt="Fashion editorial"
               fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
             />
           </motion.div>
@@ -56,6 +57,7 @@ export function EditorialSection() {
               src={SITE_IMAGES.editorial2}
               alt="Fashion editorial"
               fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
             />
           </motion.div>

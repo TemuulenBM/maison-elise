@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: "Jewellery | Maison Élise",
   description:
     "Explore our curated selection of fine jewellery. Necklaces, earrings, bracelets, and rings designed with refined elegance.",
+  openGraph: {
+    title: "Jewellery | MAISON ÉLISE",
+    description:
+      "Explore our curated selection of fine jewellery. Necklaces, earrings, bracelets, and rings designed with refined elegance.",
+  },
 }
 
 export const revalidate = 60

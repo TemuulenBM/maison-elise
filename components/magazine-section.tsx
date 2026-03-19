@@ -1,58 +1,42 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { motion } from "framer-motion"
 import { ImageWithSkeleton } from "./image-with-skeleton"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { SITE_IMAGES } from "@/lib/site-images"
 
+const EASE_LUXURY = [0.25, 0.1, 0.25, 1] as const
+
 export function MagazineSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-background">
+    <section className="py-24 lg:py-32 bg-background">
       <div className="px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           {/* Magazine Image */}
-          <div
-            className={`transition-all duration-700 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7, ease: EASE_LUXURY }}
           >
             <div className="relative aspect-[3/4] overflow-hidden">
               <ImageWithSkeleton
                 src={SITE_IMAGES.editorialAtelier}
                 alt="Maison Élise Atelier"
                 fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover hover:scale-105 transition-transform duration-700"
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Content */}
-          <div
-            className={`transition-all duration-700 delay-150 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7, ease: EASE_LUXURY, delay: 0.15 }}
           >
             <div className="border-l border-primary/30 pl-6">
               <p className="text-[11px] tracking-[0.2em] text-text-tertiary uppercase mb-6">
@@ -77,7 +61,7 @@ export function MagazineSection() {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
