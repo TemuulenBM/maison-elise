@@ -3,6 +3,8 @@ import Link from "next/link"
 import { prisma } from "@/lib/prisma"
 import { formatPrice } from "@/types"
 
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   title: "Admin | Maison Élise",
   robots: { index: false, follow: false },
