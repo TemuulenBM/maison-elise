@@ -3,8 +3,20 @@ import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { checkoutIntentSchema } from "@/lib/validators/order";
 import { createServerClient } from "@/lib/supabase/server";
+import { checkoutRateLimit } from "@/lib/redis";
 
 export async function POST(request: NextRequest) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "anonymous";
+  const { success } = await checkoutRateLimit.limit(ip);
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const body = await request.json();
   const parsed = checkoutIntentSchema.safeParse(body);
 

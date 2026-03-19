@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Loader2, Eye, EyeOff, AlertCircle } from "lucide-react"
-import { createBrowserClient } from "@/lib/supabase/client"
 import { Suspense } from "react"
 
 /* ──────────────────────────────────────────────
@@ -29,28 +28,31 @@ function LoginForm() {
     setIsLoading(true)
 
     try {
-      const supabase = createBrowserClient()
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       })
 
-      if (authError) {
-        setError(
-          authError.message === "Invalid login credentials"
-            ? "Invalid email or password. Please try again."
-            : authError.message
-        )
+      if (!res.ok) {
+        const data = await res.json()
+        if (res.status === 429) {
+          setError("Too many login attempts. Please try again later.")
+        } else {
+          setError(
+            data.error === "Invalid login credentials"
+              ? "Invalid email or password. Please try again."
+              : (data.error ?? "An unexpected error occurred.")
+          )
+        }
         setIsLoading(false)
         return
       }
 
-      if (data.user) {
-        // Cart merge — server-side auth-аар userId авна
-        await fetch("/api/cart/merge", { method: "POST" }).catch(() => {})
-        router.push(redirect)
-        router.refresh()
-      }
+      // Cart merge — server-side auth-аар userId авна
+      await fetch("/api/cart/merge", { method: "POST" }).catch(() => {})
+      router.push(redirect)
+      router.refresh()
     } catch {
       setError("An unexpected error occurred. Please try again.")
       setIsLoading(false)

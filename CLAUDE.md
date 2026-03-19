@@ -53,6 +53,7 @@ Maison Élise is a luxury handbag e-commerce storefront built with Next.js 16 (A
 - `/auth/login` — login page
 - `/auth/signup` — signup page
 - `/auth/callback` — auth callback (code exchange, profile creation, cart merge)
+- `/api/auth/login` — `POST` rate-limited login proxy (IP: 10/min) → delegates to Supabase `signInWithPassword`; sets session cookies via `@supabase/ssr`
 - `/account` — user account dashboard (protected, requires auth) — shows recent orders, wishlist, addresses
 - `/account/orders/[id]` — order detail page (protected, owner-only)
 - `/account/addresses` — address book CRUD page (protected)

@@ -3,8 +3,20 @@ import { prisma } from "@/lib/prisma";
 import { waitlistSchema } from "@/lib/validators/waitlist";
 import { resend, FROM_EMAIL } from "@/lib/resend";
 import { waitlistNotificationHtml, waitlistNotificationText } from "@/emails/waitlist-notification";
+import { waitlistRateLimit } from "@/lib/redis";
 
 export async function POST(request: NextRequest) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "anonymous";
+  const { success } = await waitlistRateLimit.limit(ip);
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const body = await request.json();
   const parsed = waitlistSchema.safeParse(body);
 
