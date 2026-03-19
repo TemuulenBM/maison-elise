@@ -18,7 +18,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Wishlist item not found" }, { status: 404 });
   }
 
-  // Зөвхөн өөрийн session-ий item-г устгаж болно
+  // Only allow deletion of items belonging to the current session
   if (entry.sessionId !== sessionId) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

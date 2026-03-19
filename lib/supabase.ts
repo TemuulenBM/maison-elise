@@ -1,8 +1,8 @@
 import { createClient } from "@supabase/supabase-js"
 
-// Server-side Supabase client (service role — бүрэн эрхтэй, RLS алгасна)
-// Auth-д ХЭРЭГЛЭХГҮЙ — зөвхөн admin operations-д (webhook, cron, seed)
-// Auth-д lib/supabase/server.ts эсвэл lib/supabase/client.ts ашиглана
+// Server-side Supabase client (service role — full access, bypasses RLS)
+// Do NOT use for auth — admin operations only (webhooks, cron, seed)
+// For auth, use lib/supabase/server.ts or lib/supabase/client.ts
 export function createServiceClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY

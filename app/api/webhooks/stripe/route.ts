@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
       if (!orderId) break;
 
-      // Idempotency: зөвхөн PENDING order-ийг process хийх
+      // Idempotency: only process PENDING orders
       const order = await prisma.order.findUnique({
         where: { id: orderId },
         include: {
@@ -55,11 +55,11 @@ export async function POST(request: NextRequest) {
       });
 
       if (!order || order.status !== "PENDING") {
-        // Аль хэдийн process хийгдсэн эсвэл олдоогүй — алгасах
+        // Already processed or not found — skip
         break;
       }
 
-      // Атомар: Order status + stock decrement нэг transaction-д
+      // Atomic: update order status and decrement stock in one transaction
       await prisma.$transaction([
         prisma.order.update({
           where: { id: orderId },
@@ -76,12 +76,12 @@ export async function POST(request: NextRequest) {
         ),
       ]);
 
-      // Cart устгах
+      // Delete the cart
       if (cartId) {
         await prisma.cart.delete({ where: { id: cartId } }).catch(() => {});
       }
 
-      // Хэрэглэгчийн email авах
+      // Fetch customer email
       const { createServiceClient } = await import("@/lib/supabase");
       const supabaseAdmin = createServiceClient();
       const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(order.userId);
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
             giftNote: order.giftNote,
           }),
         }).catch(() => {
-          // Email алдаа нь webhook-ийг амжилтгүй болгохгүй
+          // Email errors should not fail the webhook
         });
       }
 
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
       const orderId = paymentIntent.metadata.orderId;
 
       if (orderId) {
-        // Order-ийн reserved буцаах
+        // Release reserved stock for the order
         const order = await prisma.order.findUnique({
           where: { id: orderId },
           include: { items: true },

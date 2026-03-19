@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
   const { variantId } = parsed.data;
   const sessionId = await getOrCreateSessionId();
 
-  // Variant байгаа эсэх шалгах
+  // Verify variant exists
   const variant = await prisma.productVariant.findUnique({
     where: { id: variantId },
     select: { id: true },
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Variant not found" }, { status: 404 });
   }
 
-  // Давхардлыг шалгаад toggle хийх
+  // Check for duplicate and toggle
   const existing = await prisma.wishlist.findFirst({
     where: { sessionId, variantId },
   });

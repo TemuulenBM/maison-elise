@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { createServerClient } from "@/lib/supabase/server";
 
-const DEFAULT_LIMIT = 10;
-const MAX_LIMIT = 50;
+const querySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+});
 
 export async function GET(request: NextRequest) {
   const supabase = await createServerClient();
@@ -16,11 +19,10 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url);
-  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
-  const limit = Math.min(
-    MAX_LIMIT,
-    Math.max(1, parseInt(searchParams.get("limit") ?? String(DEFAULT_LIMIT), 10))
-  );
+  const { page, limit } = querySchema.parse({
+    page: searchParams.get("page") ?? undefined,
+    limit: searchParams.get("limit") ?? undefined,
+  });
   const skip = (page - 1) * limit;
 
   const [orders, total] = await Promise.all([

@@ -10,7 +10,7 @@ export async function GET(
 ) {
   const { slug } = await params;
 
-  // Sanity болон DB-г паралель хүсэлт хийнэ
+  // Fetch from Sanity and DB in parallel
   const [editorial, hotspots] = await Promise.all([
     process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
       ? sanityClient
@@ -26,7 +26,7 @@ export async function GET(
     return NextResponse.json({ error: "Editorial not found" }, { status: 404 });
   }
 
-  // Hotspot бүхэн дэх бүтээгдэхүүний мэдээллийг нэг хүсэлтээр авна
+  // Batch-fetch product data for all hotspots in one query
   const productIds = [...new Set(hotspots.map((h) => h.productId))];
   const products =
     productIds.length > 0

@@ -21,7 +21,7 @@ export async function PATCH(
   const { quantity } = parsed.data;
   const sessionId = await getOrCreateSessionId();
 
-  // Cart item олох + эзэмшлийг шалгах
+  // Find cart item and verify ownership
   const item = await prisma.cartItem.findUnique({
     where: { id },
     include: {

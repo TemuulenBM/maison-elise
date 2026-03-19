@@ -1,7 +1,7 @@
 import { createClient } from "next-sanity";
 import { createImageUrlBuilder } from "@sanity/image-url";
 
-// NEXT_PUBLIC_SANITY_PROJECT_ID тохируулагдаагүй үед build алдааг урьдчилан тойрч гарах
+// Guard against build errors when NEXT_PUBLIC_SANITY_PROJECT_ID is not set
 export const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "placeholder",
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",

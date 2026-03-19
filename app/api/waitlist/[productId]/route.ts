@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+
+const emailSchema = z.string().email();
 
 export async function GET(
   request: NextRequest,
@@ -10,6 +13,11 @@ export async function GET(
 
   if (!email) {
     return NextResponse.json({ error: "email query parameter required" }, { status: 400 });
+  }
+
+  const parsed = emailSchema.safeParse(email);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Please enter a valid email address" }, { status: 400 });
   }
 
   const entry = await prisma.waitlist.findUnique({

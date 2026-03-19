@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
   const { productId, email, name } = parsed.data;
 
-  // Product байгаа эсэхийг шалгах
+  // Verify product exists
   const product = await prisma.product.findUnique({
     where: { id: productId },
     select: { id: true, name: true, slug: true },
@@ -27,14 +27,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
   }
 
-  // Давхардал шалгах (upsert)
+  // Check for duplicate entry (upsert)
   const entry = await prisma.waitlist.upsert({
     where: { productId_email: { productId, email } },
     update: { name },
     create: { productId, email, name },
   });
 
-  // Шинэ бүртгэл байвал confirmation email явуулна
+  // Send confirmation email for new registrations
   const isNew = entry.createdAt.getTime() === entry.createdAt.getTime();
   if (isNew) {
     await resend.emails.send({
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       html: waitlistNotificationHtml({ name, email, productName: product.name, productSlug: product.slug }),
       text: waitlistNotificationText({ name, email, productName: product.name, productSlug: product.slug }),
     }).catch(() => {
-      // Email алдаа нь API response-г амжилтгүй болгохгүй
+      // Email errors should not fail the API response
     });
   }
 

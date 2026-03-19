@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
   const { variantId, quantity } = parsed.data;
 
-  // Variant + stock шалгах
+  // Validate variant exists and is in stock
   const variant = await prisma.productVariant.findUnique({
     where: { id: variantId },
     include: { product: { select: { basePrice: true, status: true } } },
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
   const cart = await getOrCreateCart(sessionId);
   const price = variant.priceOverride ?? variant.product.basePrice;
 
-  // Атомар upsert: interactive transaction ашиглан race condition-ээс сэргийлнэ
+  // Atomic upsert using interactive transaction to prevent race conditions
   try {
     await prisma.$transaction(async (tx) => {
       // Lock variant row to prevent concurrent stock modifications

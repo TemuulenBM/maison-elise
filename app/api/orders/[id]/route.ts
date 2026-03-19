@@ -46,7 +46,7 @@ export async function GET(
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }
 
-  // Owner шалгах — өөр хэрэглэгчийн захиалга харахаас хамгаалах
+  // Verify ownership — prevent accessing another user's order
   if (order.userId !== user.id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

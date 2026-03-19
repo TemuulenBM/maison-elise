@@ -40,6 +40,14 @@ export async function POST(
     return NextResponse.json({ error: "No file provided" }, { status: 400 })
   }
 
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"]
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return NextResponse.json(
+      { error: "Only JPEG, PNG, WEBP, and AVIF image formats are supported" },
+      { status: 400 }
+    )
+  }
+
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg"
   const suffix = variantId ? `-${variantId}` : ""
   const fileName = `${product.slug}${suffix}.${ext}`

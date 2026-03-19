@@ -1,12 +1,12 @@
 import { z } from "zod";
 
 export const shippingAddressSchema = z.object({
-  fullName: z.string().min(1, "Нэр шаардлагатай"),
-  line1: z.string().min(1, "Хаяг шаардлагатай"),
+  fullName: z.string().min(1, "Name is required"),
+  line1: z.string().min(1, "Address is required"),
   line2: z.string().optional(),
-  city: z.string().min(1, "Хот шаардлагатай"),
+  city: z.string().min(1, "City is required"),
   state: z.string().optional(),
-  postalCode: z.string().min(1, "Шуудангийн код шаардлагатай"),
+  postalCode: z.string().min(1, "Postal code is required"),
   country: z.string().min(2).max(2), // ISO 3166-1 alpha-2
   phone: z.string().optional(),
 });

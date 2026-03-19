@@ -1,7 +1,7 @@
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
 
-// Redis client — cart session, cache, rate limiting-д ашиглана
+// Redis client — used for cart sessions, caching, and rate limiting
 export const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL ?? "",
   token: process.env.UPSTASH_REDIS_REST_TOKEN ?? "",

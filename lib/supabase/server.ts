@@ -18,7 +18,7 @@ export async function createServerClient() {
               cookieStore.set(name, value, options)
             })
           } catch {
-            // Server Component-д cookie set хийх боломжгүй — middleware-д хийгдэнэ
+            // Cannot set cookies in Server Components — handled by middleware
           }
         },
       },

@@ -1,4 +1,4 @@
-// PDF 8.2 Animation spec-ийн дагуу тодорхойлсон Framer Motion variant-ууд
+// Framer Motion variants defined per animation spec
 
 export const EASE_LUXURY = [0.25, 0.1, 0.25, 1] as const
 

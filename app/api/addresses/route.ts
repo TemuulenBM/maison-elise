@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
   const data = parsed.data;
 
   const address = await prisma.$transaction(async (tx) => {
-    // Шинэ хаяг default байвал бусдыг нь false болгоно
+    // If the new address is default, unset all others
     if (data.isDefault) {
       await tx.address.updateMany({
         where: { userId: user.id, isDefault: true },

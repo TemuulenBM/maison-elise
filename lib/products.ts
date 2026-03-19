@@ -2,7 +2,7 @@ import { prisma } from "./prisma"
 import type { ProductQuery } from "./validators/product"
 import type { ProductDTO, ProductVariantDTO, ProductImageDTO } from "@/types"
 
-// ─── Prisma → DTO хөрвүүлэгч ───
+// ─── Prisma → DTO converters ───
 
 function toImageDTO(img: {
   id: string
